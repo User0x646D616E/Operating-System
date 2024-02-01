@@ -1,8 +1,12 @@
 public class GoodbyeWorld extends UserlandProcess {
-    @Override
     void main() {
         while(true){
-            System.out.println("Hello World");
+            try {
+                System.out.println("Goodbye World");
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             cooperate();
         }
     }
