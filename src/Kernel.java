@@ -1,6 +1,6 @@
 import java.util.concurrent.Semaphore;
 
-public class Kernel extends Thread {
+public class Kernel implements Runnable {
 
     public static Thread thread = new Thread(new Kernel(), "Kernel");
     /** Indicates when our {@code thread} is allowed to run */
@@ -23,7 +23,7 @@ public class Kernel extends Thread {
         }
     }
 
-    public static void startThread()
+    public void start()
     {
         semaphore.release();
     }
@@ -33,6 +33,7 @@ public class Kernel extends Thread {
         while(true)
         {
             try {
+                synchronized (OS.getLock()){ OS.notifyComplete(); }
                 semaphore.acquire(); // Kernel.thread.state == WAITING
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);

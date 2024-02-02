@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class OS {
     /** Our Kernel <3 */
     private static Kernel kernel;
+    private static final Object lock = new Object();
 
     /** Types of system calls */
     public enum CallType {
@@ -15,8 +16,8 @@ public class OS {
 
     /** Parameters of our system call {@code currentCall} */
     static ArrayList<Object> params;
-    /** return value of our system call {@code currentCall} */
-    static Object returnValue;
+//    /** return value of our system call {@code currentCall} */
+//    static Object returnValue;
 
 
     /**
@@ -25,19 +26,19 @@ public class OS {
      *
      * @param init process to be run at startup
      */
-    public static void startup(UserlandProcess init) throws InterruptedException {
+    public static void startup(UserlandProcess init) {
         OSPrinter.println("OS: starting up :)");
         kernel = new Kernel();
         params = new ArrayList<>();
 
-        OSPrinter.print("OS: ");
-        while(Kernel.thread.getState() != Thread.State.WAITING)
-            OSPrinter.print("Waiting for Kernel thread... ");
+        waitForKernel();
         OSPrinter.println("\nOS: Kernel waiting to run\n");
 
         createProcess(init);
         createProcess(new IdleProcess());
     }
+
+
 
     /**
      * Sets our Shared Memory with our kernel - {@code CallType} and {@code params} - to request our {@code kernel} to create, and run, a new {@code UserlandProcess} up
@@ -52,24 +53,26 @@ public class OS {
         params.add(up); // sets params for kernel
         kernel.start();
 
+        waitForKernel();
+    }
 
-//        waitForKernel();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+    private static void waitForKernel() {
+        synchronized (lock){
+            try {
+                lock.wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
-//    static void waitForKernel() {
-//        while(Kernel.thread.getState() != Thread.State.WAITING){
-//            try {
-//                this.wait();
-//            } catch (InterruptedException e) { }
-//            System.out.print(".");
-//        }
-//        this.notify();
-//    }
+    static Object getLock(){
+        return lock;
+    }
+
+    public static void notifyComplete() {
+        lock.notify();
+    }
 
 
     /**
