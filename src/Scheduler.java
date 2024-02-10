@@ -3,13 +3,13 @@ import java.util.Timer; import java.util.TimerTask;
 
 public class Scheduler {
     /** List of processes the KernelLand.Scheduler can access */
-    private LinkedList<UserlandProcess> processList; //@TODO should probably be a queue
+    private final LinkedList<UserlandProcess> processList; //@TODO should probably be a queue
 
     /** Schedules interrupts */
     private Timer interruptTimer;
 
     /** Time in until next interrupt, in ms */
-    long quantum = 250;
+    private long quantum = 250;
 
     /** Currently running process */
     public UserlandProcess currProcess;
@@ -32,6 +32,8 @@ public class Scheduler {
         interruptTimer.scheduleAtFixedRate(requestStop, 1000, quantum);
     }
 
+    /** Adds process to our {@code process list}, if nothing else is running it runs it
+     * @return pid of the process */
     public int createProcess(UserlandProcess up)
     {
         OSPrinter.println("Scheduler: Create process");
@@ -45,9 +47,11 @@ public class Scheduler {
 
         OSPrinter.println("process list: " + processList);
         OSPrinter.println("");
-        return 0;
+
+        return processList.indexOf(up); // @TODO more efficient way please
     }
 
+    /** Switches currently running process */
     public void switchProcess()
     {
         OSPrinter.println("Scheduler: switch process");

@@ -1,15 +1,14 @@
 import java.util.concurrent.Semaphore;
 
 public class Kernel implements Runnable {
+    /** Runs our kernel execution */
+    private static final Thread thread = new Thread(new Kernel(), "Kernel");
 
-    public static Thread thread = new Thread(new Kernel(), "Kernel");
     /** Indicates when our {@code thread} is allowed to run */
-    static Semaphore semaphore;
+    int cores; // Amount of cores in our computer
+    private static Semaphore semaphore;
 
-    static Scheduler scheduler;
-
-    static int cores; // Amount of cores in our computer
-
+    private static Scheduler scheduler;
 
     Kernel(){
         if(thread != null){
@@ -42,7 +41,7 @@ public class Kernel implements Runnable {
             OSPrinter.print("Kernel: Running " + OS.currentCall + " -> ");
 
             switch (OS.currentCall) {
-                case CREATEPROCESS -> scheduler.createProcess((UserlandProcess) OS.params.get(0));
+                case CREATEPROCESS -> OS.returnValue = scheduler.createProcess((UserlandProcess) OS.params.get(0));
                 case SWITCHPROCESS -> scheduler.switchProcess();
                 case SHUTDOWN -> { return; }
             }

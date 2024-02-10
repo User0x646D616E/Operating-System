@@ -10,4 +10,14 @@ public class GoodbyeWorld extends UserlandProcess {
             cooperate();
         }
     }
+
+    void function(String str){
+        try {
+            System.out.println(str);
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        cooperate();
+    }
 }

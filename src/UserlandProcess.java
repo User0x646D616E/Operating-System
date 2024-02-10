@@ -1,8 +1,9 @@
 import java.util.concurrent.Semaphore;
 
 public abstract class UserlandProcess implements Runnable {
-    Thread thread;
+    private final Thread thread;
     Semaphore semaphore;
+    int pid; //TODO this
 
     boolean quantumExpired;
 
@@ -18,7 +19,8 @@ public abstract class UserlandProcess implements Runnable {
         quantumExpired = false;
 
         thread.start();
-        while(thread.getState() == Thread.State.NEW) {  }
+        /* Wait for thread to become avalabe */
+        while(thread.getState() == Thread.State.NEW) {Thread.onSpinWait();}
     }
 
     abstract void main();
@@ -28,7 +30,7 @@ public abstract class UserlandProcess implements Runnable {
     public void run()
     {
         try {
-            semaphore.acquire();
+            semaphore.acquire(); // thread.state == WAITING
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

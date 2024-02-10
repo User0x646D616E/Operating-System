@@ -16,8 +16,8 @@ public class OS {
 
     /** Parameters of our system call {@code currentCall} */
     static ArrayList<Object> params;
-//    /** return value of our system call {@code currentCall} */
-//    static Object returnValue;
+    /** return value of our system call {@code currentCall} */
+    static Object returnValue;
 
 
     /**
@@ -56,6 +56,7 @@ public class OS {
         waitForKernel();
     }
 
+    /** Wait for the {@code kernel} thread to finish the execution */
     private static void waitForKernel() {
         synchronized (lock){
             try {
@@ -66,17 +67,20 @@ public class OS {
         }
     }
 
+    /** notify the OS to continue execution */
+    static void notifyComplete() {
+        lock.notify();
+    }
+
+    /** return {@code lock} */
     static Object getLock(){
         return lock;
     }
 
-    public static void notifyComplete() {
-        lock.notify();
-    }
 
 
     /**
-     * Tells our {@code KernelLand.Kernel} to switch process'
+     * Tells our {@code kernel} to switch process'
      */
     public static void switchProcess() {
         OSPrinter.print("\nOS: Switch process -> ");
