@@ -59,15 +59,23 @@ public abstract class UserlandProcess implements Runnable {
    /**
     * switches process when {@code quantumExpired} == true
     */
-    void cooperate() {
+    boolean cooperate() {
         if(quantumExpired) {
            OS.switchProcess();
            quantumExpired = false;
+           return true;
+        }
+        return false;
+    }
+
+    void halt() {
+        while(!cooperate()) {
+            Thread.onSpinWait();
         }
     }
 
    /**
-    * sets quantumExpired, indicating that this process’ quantum has expired
+    * sets quantumExpired, indicating that this processes quantum has expired
     */
    void requestStop()
    {

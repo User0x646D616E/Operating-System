@@ -12,6 +12,7 @@ public class World extends UserlandProcess {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+            System.out.flush();
             cooperate();
         }
     }

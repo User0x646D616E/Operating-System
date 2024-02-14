@@ -1,31 +1,39 @@
-import java.util.LinkedList;
-import java.util.Timer; import java.util.TimerTask;
+import java.time.Clock;
+import java.util.*;
 
 public class Scheduler {
-    /** List of processes the KernelLand.Scheduler can access */
-    private final LinkedList<UserlandProcess> processList; //@TODO should probably be a queue
+    /** List of processes the Scheduler can access with real time priority */
+    private final Queue<PCB> realTime;
+    /** List of processes the Scheduler can access with interactive priority */
+    private final Queue<PCB> interactive;
+    /** List of processes the Scheduler can access with background priority */
+    private final Queue<PCB> background;
 
-    /** Schedules interrupts */
-    private Timer interruptTimer;
+    private final Queue<PCB> sleeping;
+
+    private final Clock clock = Clock.systemUTC();
 
     /** Time in until next interrupt, in ms */
-    private long quantum = 250;
+    private final long quantum = 250;
 
     /** Currently running process */
-    public UserlandProcess currProcess;
-
+    public PCB runningPCB;
 
     /** Creates a new KernelLand.Scheduler */
     Scheduler()
     {
-        processList = new LinkedList<>();
-        interruptTimer = new Timer("Interrupt");
+        realTime = new LinkedList<>();
+        interactive = new LinkedList<>();
+        background = new LinkedList<>();
+        sleeping = new LinkedList<>();
+
+        Timer interruptTimer = new Timer("Interrupt");
 
         TimerTask requestStop = new TimerTask() {
             @Override
             public void run() {
-                if(currProcess != null)
-                    currProcess.requestStop();
+                if(runningPCB != null)
+                    runningPCB.up.requestStop(); // will switch process'
             }
         };
 
@@ -38,32 +46,55 @@ public class Scheduler {
     {
         OSPrinter.println("Scheduler: Create process");
 
-        processList.add(up);
+        PCB newPCB = new PCB(up);
+        newPCB.priority = OS.Priority.INTERACTIVE;
+        interactive.add(newPCB);
 
-        if(currProcess == null)
-            currProcess = up;
-        else if(currProcess.isDone())
+        if(runningPCB == null)
+            runningPCB = newPCB;
+        else if(runningPCB.isDone())
             switchProcess();
 
-        OSPrinter.println("process list: " + processList);
-        OSPrinter.println("");
+        OSPrinter.println("Interactive process list: " + interactive); OSPrinter.println("");
 
-        return processList.indexOf(up); // @TODO more efficient way please
+        return up.pid;
     }
 
-    /** Switches currently running process */
+    /** Switches currently running process
+     * Awakens sleeping processes */
     public void switchProcess()
     {
+        if(runningPCB == null) return; // no need to switch
+
         OSPrinter.println("Scheduler: switch process");
 
-        currProcess.stop();
-        processList.remove(currProcess);
-        if(!currProcess.isDone())
-            processList.addLast(currProcess);
+        /* Get the processes priority */
+        Queue<PCB> priority;
+        String priorityName;
+        switch (runningPCB.priority) {
+            case REALTIME -> { priority = realTime; priorityName = "Real time"; }
+            case INTERACTIVE -> { priority = interactive; priorityName = "Interactive"; }
+            case BACKGROUND -> { priority = background; priorityName = "background"; }
+            default -> throw new RuntimeException("PCB priority not set");
+        }
 
-        currProcess = processList.getFirst();
+        runningPCB.stop();
+        priority.remove();
+        if(!runningPCB.isDone())
+            priority.add(runningPCB);
 
-        OSPrinter.println("process list: " + processList);
+        runningPCB = priority.peek();
+
+        OSPrinter.println(priorityName + " process list: " + priority);
         OSPrinter.println("");
+    }
+
+    public void sleep(int milliseconds)
+    {
+        OSPrinter.println("Scheduler: sleep");
+
+
+//        runningPCB.isDone(true);
+        switchProcess();
     }
 }

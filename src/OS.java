@@ -9,6 +9,7 @@ public class OS {
     public enum CallType {
         CREATEPROCESS,
         SWITCHPROCESS,
+        SLEEP,
         SHUTDOWN,
     }
     /** System call to be executed by the Kernel */
@@ -18,6 +19,15 @@ public class OS {
     static ArrayList<Object> params;
     /** return value of our system call {@code currentCall} */
     static Object returnValue;
+
+    /** Priority of a {@code UserlandProcess}
+     * determines runtime priority of the process
+     * */
+    public enum Priority {
+        REALTIME,
+        INTERACTIVE,
+        BACKGROUND
+    }
 
 
     /**
@@ -38,9 +48,8 @@ public class OS {
         createProcess(new IdleProcess());
     }
 
-
-
     /**
+     * Tells our Kernel to create a new {@code UserlandProcess} with default priority interactive
      * Sets our Shared Memory with our kernel - {@code CallType} and {@code params} - to request our {@code kernel} to create, and run, a new {@code UserlandProcess} up
      *
      * @param up {@code UserlandProcess} to be created
@@ -51,6 +60,46 @@ public class OS {
 
         params.clear();
         params.add(up); // sets params for kernel
+        params.add(Priority.INTERACTIVE);
+        kernel.start();
+
+        waitForKernel();
+    }
+    /**
+     * Tells our Kernel to create a new {@code UserlandProcess} with set priority
+     * Sets the Shared Memory with our kernel - {@code CallType} and {@code params} - to request our {@code kernel} to create, and run, a new {@code UserlandProcess} up
+     *
+     * @param up {@code UserlandProcess} to be created
+     *
+     */
+    public static void createProcess(UserlandProcess up, Priority priority)
+    {
+        OSPrinter.printf("\nOS: Create process{%s} -> ", up);
+        currentCall = CallType.CREATEPROCESS;
+
+        params.clear();
+        params.add(up);
+        params.add(priority);
+        kernel.start();
+
+        waitForKernel();
+    }
+
+    /**
+     * Tells our {@code kernel} to switch process'
+     */
+    public static void switchProcess() {
+        OSPrinter.print("\nOS: Switch process -> ");
+        currentCall = CallType.SWITCHPROCESS;
+        kernel.start();
+    }
+
+    static void sleep(int milliseconds) {
+        OSPrinter.print("\nOS: sleep -> ");
+        currentCall = CallType.SLEEP;
+
+        params.clear();
+        params.add(milliseconds);
         kernel.start();
 
         waitForKernel();
@@ -79,12 +128,4 @@ public class OS {
 
 
 
-    /**
-     * Tells our {@code kernel} to switch process'
-     */
-    public static void switchProcess() {
-        OSPrinter.print("\nOS: Switch process -> ");
-        currentCall = CallType.SWITCHPROCESS;
-        kernel.start();
-    }
 }
