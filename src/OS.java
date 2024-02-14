@@ -46,6 +46,8 @@ public class OS {
 
         createProcess(init);
         createProcess(new IdleProcess());
+
+        OSPrinter.println("\nOS: startup complete\n");
     }
 
     /**
@@ -92,10 +94,12 @@ public class OS {
         OSPrinter.print("\nOS: Switch process -> ");
         currentCall = CallType.SWITCHPROCESS;
         kernel.start();
+        waitForKernel();
     }
 
     static void sleep(int milliseconds) {
-        OSPrinter.print("\nOS: sleep -> ");
+//        OSPrinter.print("\nOS: sleep -> ");
+        OSPrinter.printf("\nOS: Sleep{%s} -> ", Kernel.scheduler.runningPCB);
         currentCall = CallType.SLEEP;
 
         params.clear();

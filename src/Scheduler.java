@@ -33,7 +33,7 @@ public class Scheduler {
             @Override
             public void run() {
                 if(runningPCB != null)
-                    runningPCB.up.requestStop(); // will switch process'
+                    runningPCB.requestStop(); // will switch processes
             }
         };
 
@@ -47,7 +47,7 @@ public class Scheduler {
         OSPrinter.println("Scheduler: Create process");
 
         PCB newPCB = new PCB(up);
-        newPCB.priority = OS.Priority.INTERACTIVE;
+        newPCB.setPriority(OS.Priority.INTERACTIVE);
         interactive.add(newPCB);
 
         if(runningPCB == null)
@@ -60,41 +60,46 @@ public class Scheduler {
         return up.pid;
     }
 
-    /** Switches currently running process
+    /** Switches currently running process.
      * Awakens sleeping processes */
     public void switchProcess()
     {
-        if(runningPCB == null) return; // no need to switch
-
         OSPrinter.println("Scheduler: switch process");
+
+        runningPCB.requestStop();
 
         /* Get the processes priority */
         Queue<PCB> priority;
         String priorityName;
-        switch (runningPCB.priority) {
+        switch (runningPCB.getPriority()) {
             case REALTIME -> { priority = realTime; priorityName = "Real time"; }
             case INTERACTIVE -> { priority = interactive; priorityName = "Interactive"; }
             case BACKGROUND -> { priority = background; priorityName = "background"; }
             default -> throw new RuntimeException("PCB priority not set");
         }
 
-        runningPCB.stop();
         priority.remove();
-        if(!runningPCB.isDone())
+        if(!runningPCB.isDone() && !runningPCB.isSleeping())
             priority.add(runningPCB);
 
         runningPCB = priority.peek();
 
         OSPrinter.println(priorityName + " process list: " + priority);
-        OSPrinter.println("");
     }
 
+    /** Stop currentPCB, add it to the {@code sleeping} queue and set the next process to run */
     public void sleep(int milliseconds)
     {
-        OSPrinter.println("Scheduler: sleep");
+        if(runningPCB.isSleeping()) return;
+        OSPrinter.printf("Scheduler{%s}: sleep\n", runningPCB);
 
+        runningPCB.isSleeping(true);
+        runningPCB.setTimeToWake(clock.millis() + milliseconds);
+        sleeping.add(runningPCB);
 
-//        runningPCB.isDone(true);
-        switchProcess();
+        switchProcess(); // take it off the list and run next process
+
+        OSPrinter.println("Sleeping process list: " + sleeping);
+        OSPrinter.println("");
     }
 }

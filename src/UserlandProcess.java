@@ -25,15 +25,15 @@ public abstract class UserlandProcess implements Runnable {
 
     abstract void main();
 
-
     @Override
     public void run()
     {
         try {
-            semaphore.acquire(); // thread.state == WAITING
+            semaphore.acquire(); // wait until os is ready
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        start(); // so main can run
         main();
     }
 
@@ -46,36 +46,40 @@ public abstract class UserlandProcess implements Runnable {
     }
 
     /**
-     * acquires (decrements) the semaphore, stopping this thread from running
+     * TODO Stops thread from running main process, switches processes and waits to be started again
      */
     void stop() {
-        try {
-            semaphore.acquire(semaphore.availablePermits());
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        semaphore.drainPermits();
+//        thread.cooperate(); // we need the thread that's running the process to immediately cooperate
     }
 
    /**
-    * switches process when {@code quantumExpired} == true
+    * switches process when quantum is expired and waits to be scheduled
     */
-    boolean cooperate() {
-        if(quantumExpired) {
-           OS.switchProcess();
+     void cooperate() {
+        if(quantumExpired || semaphore.availablePermits() == 0) {
+           OS.switchProcess(); // calls stop to process
            quantumExpired = false;
-           return true;
+
+            try {
+                semaphore.acquire();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
         }
-        return false;
     }
 
+    /** Wait until quantum expired to continue */
     void halt() {
-        while(!cooperate()) {
-            Thread.onSpinWait();
-        }
+//        while(!cooperate()) {
+//            Thread.onSpinWait();
+//        }
     }
 
    /**
-    * sets quantumExpired, indicating that this processes quantum has expired
+    * Sets quantumExpired, indicating that this processes quantum has expired.
+    * Stops when thread hits cooperate
     */
    void requestStop()
    {

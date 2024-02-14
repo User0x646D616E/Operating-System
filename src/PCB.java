@@ -1,10 +1,13 @@
 public class PCB {
     static int nextpid = 0;
-    int pid;
+    private int pid;
+    /** note: can wake up if time >= time to wake*/
+    private long timeToWake; // Time until the process can be awoken
+    private boolean isSleeping;
 
-    UserlandProcess up;
+    private UserlandProcess up;
 
-    OS.Priority priority;
+    private OS.Priority priority;
 
     /** creates thread, sets pid */
     PCB(UserlandProcess up){
@@ -12,8 +15,29 @@ public class PCB {
         this.up = up;
     }
 
+    public OS.Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(OS.Priority priority) {
+        this.priority = priority;
+    }
+
+    public boolean isSleeping() {
+        return isSleeping;
+    }
+
+    /** Stop process and tuck it in and give it a kiss goodnight */
+    public void isSleeping(boolean isSleeping){
+        if(isSleeping) stop();
+        this.isSleeping = isSleeping;
+    }
+
     void stop(){
         up.stop();
+    }
+    void requestStop(){
+        up.requestStop();
     }
 
     boolean isDone(){
@@ -21,7 +45,15 @@ public class PCB {
     }
 
     void run(){
+        up.start();
+    }
 
+    void setTimeToWake(long timeToWake){
+        this.timeToWake = timeToWake;
+    }
+
+    long getTimeToWake(){
+        return timeToWake;
     }
 
     @Override

@@ -8,7 +8,7 @@ public class Kernel implements Runnable {
     int cores; // Amount of cores in our computer
     private static Semaphore semaphore;
 
-    private static Scheduler scheduler;
+    static Scheduler scheduler;
 
     Kernel(){
         if(thread != null){
@@ -48,7 +48,7 @@ public class Kernel implements Runnable {
                 case SLEEP -> scheduler.sleep((Integer) OS.params.get(0));
                 case SHUTDOWN -> { return; }
             }
-            scheduler.runningPCB.up.start();
+            scheduler.runningPCB.run();
         }
     }
 }

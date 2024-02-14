@@ -4,16 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="Implemented 3 priority levels in scheduler">
-      <change afterPath="$PROJECT_DIR$/src/Calculate.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/PCB.java" afterDir="false" />
+    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="Implemented 3 priority levels in scheduler&#10;Added fun userland processes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Calculate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Calculate.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Kernel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Kernel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/OS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PCB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PCB.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Scheduler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UserlandProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserlandProcess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/World.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +116,14 @@
       <option name="project" value="LOCAL" />
       <updated>1707607981500</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Implemented 3 priority levels in scheduler&#10;Added fun userland processes">
+      <created>1707930061585</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1707930061585</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -150,7 +156,8 @@
     <MESSAGE value="The OS and its kernel thread are now sycronised&#10;They can more easily use shared memory.&#10;The kernel can communicate using the lock object in OS." />
     <MESSAGE value="Functioning OS kind of" />
     <MESSAGE value="Implemented 3 priority levels in scheduler" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented 3 priority levels in scheduler" />
+    <MESSAGE value="Implemented 3 priority levels in scheduler&#10;Added fun userland processes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented 3 priority levels in scheduler&#10;Added fun userland processes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
