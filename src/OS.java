@@ -26,7 +26,8 @@ public class OS {
     public enum Priority {
         REALTIME,
         INTERACTIVE,
-        BACKGROUND
+        BACKGROUND,
+        SLEEPING,
     }
 
 
@@ -98,7 +99,6 @@ public class OS {
     }
 
     static void sleep(int milliseconds) {
-//        OSPrinter.print("\nOS: sleep -> ");
         OSPrinter.printf("\nOS: Sleep{%s} -> ", Kernel.scheduler.runningPCB);
         currentCall = CallType.SLEEP;
 

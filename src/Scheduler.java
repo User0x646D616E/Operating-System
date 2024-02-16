@@ -1,15 +1,16 @@
 import java.time.Clock;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class Scheduler {
-    /** List of processes the Scheduler can access with real time priority */
+    /** Queue of processes the Scheduler can access with real time priority */
     private final Queue<PCB> realTime;
-    /** List of processes the Scheduler can access with interactive priority */
+    /** Queue of processes the Scheduler can access with interactive priority */
     private final Queue<PCB> interactive;
-    /** List of processes the Scheduler can access with background priority */
+    /** Queue of processes the Scheduler can access with background priority */
     private final Queue<PCB> background;
-
-    private final Queue<PCB> sleeping;
+    /** Queue of sleeping processes */
+    private final PriorityQueue<PCB> sleeping;
 
     private final Clock clock = Clock.systemUTC();
 
@@ -25,7 +26,7 @@ public class Scheduler {
         realTime = new LinkedList<>();
         interactive = new LinkedList<>();
         background = new LinkedList<>();
-        sleeping = new LinkedList<>();
+        sleeping = new PriorityQueue<>(Comparator.comparingLong(PCB::getTimeToWake));
 
         Timer interruptTimer = new Timer("Interrupt");
 
@@ -39,6 +40,7 @@ public class Scheduler {
 
         interruptTimer.scheduleAtFixedRate(requestStop, 1000, quantum);
     }
+
 
     /** Adds process to our {@code process list}, if nothing else is running it runs it
      * @return pid of the process */
@@ -60,10 +62,24 @@ public class Scheduler {
         return up.pid;
     }
 
+    private void wakeProcess() {
+        while(true){
+            PCB peek = sleeping.peek();
+            if(peek == null) return;
+
+            if(peek.timeToWake <= clock.millis())
+                sleeping.poll();
+            else return;
+        }
+//        sleeping.removeIf(); // maybe
+    }
+
     /** Switches currently running process.
      * Awakens sleeping processes */
     public void switchProcess()
     {
+//        wakeProcess();
+
         OSPrinter.println("Scheduler: switch process");
 
         runningPCB.requestStop();
@@ -90,7 +106,9 @@ public class Scheduler {
     /** Stop currentPCB, add it to the {@code sleeping} queue and set the next process to run */
     public void sleep(int milliseconds)
     {
-        if(runningPCB.isSleeping()) return;
+        if(runningPCB.getPriority() == OS.Priority.SLEEPING)
+            return; // TODO make new exception 'sleeping process called function'
+
         OSPrinter.printf("Scheduler{%s}: sleep\n", runningPCB);
 
         runningPCB.isSleeping(true);
@@ -102,4 +120,6 @@ public class Scheduler {
         OSPrinter.println("Sleeping process list: " + sleeping);
         OSPrinter.println("");
     }
+
 }
+

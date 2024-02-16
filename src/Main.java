@@ -6,5 +6,6 @@ public class Main {
 
         OS.startup(new HelloWorld());
         OS.createProcess(new Calculate(Calculate.Equation.FIBBONACI));
+        OS.createProcess(new Calculate(Calculate.Equation.NEXTPRIME));
     }
 }

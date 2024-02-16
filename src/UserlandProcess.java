@@ -47,17 +47,23 @@ public abstract class UserlandProcess implements Runnable {
 
     /**
      * TODO Stops thread from running main process, switches processes and waits to be started again
+     * how do you make the running thread call stop unless it calls cooperate
      */
     void stop() {
         semaphore.drainPermits();
-//        thread.cooperate(); // we need the thread that's running the process to immediately cooperate
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        semaphore.release();
     }
 
    /**
     * switches process when quantum is expired and waits to be scheduled
     */
-     void cooperate() {
-        if(quantumExpired || semaphore.availablePermits() == 0) {
+     boolean cooperate() {
+        if(quantumExpired) {
            OS.switchProcess(); // calls stop to process
            quantumExpired = false;
 
@@ -66,15 +72,15 @@ public abstract class UserlandProcess implements Runnable {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-
+            return true;
         }
+        return false;
     }
 
     /** Wait until quantum expired to continue */
-    void halt() {
-//        while(!cooperate()) {
-//            Thread.onSpinWait();
-//        }
+    void waitForInterrupt() {
+        while(!cooperate())
+            Thread.onSpinWait();
     }
 
    /**

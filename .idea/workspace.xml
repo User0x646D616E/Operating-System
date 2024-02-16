@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="Implemented 3 priority levels in scheduler&#10;Added fun userland processes">
+    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="Userland processes will now ACTUALLY STOP when cooperate is called. Implemented sleep.">
+      <change afterPath="$PROJECT_DIR$/src/MinHeap.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Calculate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Calculate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Kernel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Kernel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HelloWorld.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HelloWorld.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/OS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/OS.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/PCB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PCB.java" afterDir="false" />
@@ -123,7 +124,14 @@
       <option name="project" value="LOCAL" />
       <updated>1707930061585</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Userland processes will now ACTUALLY STOP when cooperate is called. Implemented sleep.">
+      <created>1707941398119</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1707941398119</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -157,7 +165,8 @@
     <MESSAGE value="Functioning OS kind of" />
     <MESSAGE value="Implemented 3 priority levels in scheduler" />
     <MESSAGE value="Implemented 3 priority levels in scheduler&#10;Added fun userland processes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented 3 priority levels in scheduler&#10;Added fun userland processes" />
+    <MESSAGE value="Userland processes will now ACTUALLY STOP when cooperate is called. Implemented sleep." />
+    <option name="LAST_COMMIT_MESSAGE" value="Userland processes will now ACTUALLY STOP when cooperate is called. Implemented sleep." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
