@@ -6,11 +6,7 @@ public class Main {
 
         OS.startup(new HelloWorld());
         OS.createProcess(new GoodbyeWorld());
-        OS.createProcess(new GoodbyeWorld());
-        OS.createProcess(new GoodbyeWorld());
-        OS.createProcess(new GoodbyeWorld());
-        OS.createProcess(new GoodbyeWorld());
-//        OS.createProcess(new HelloWorld());
+//        OS.createProcess(new GoodbyeWorld());
 //        OS.createProcess(new GoodbyeWorld());
     }
 }

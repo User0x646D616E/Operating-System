@@ -64,12 +64,15 @@ public class Scheduler {
     /** Wake sleeping processes with time to wake <= current time */
     private void wakeProcess() {
         PCB peek;
-        while((peek = sleeping.peek()) != null)
+        while ((peek = sleeping.peek()) != null)
         {
-            if(peek.timeToWake <= clock.millis()){
+            if (peek.timeToWake <= clock.millis()) {
                 /* Wake process */
-
-                sleeping.poll();
+                Queue<PCB> priority = getPriorityQueue(peek);
+                priority.add(sleeping.poll());
+                OSPrinter.println("Waking process: " + peek);
+                OSPrinter.println("Interactive process list: " + interactive);
+                OSPrinter.println("Sleeping process list: " + sleeping);
             }
             else break;
         }
@@ -79,7 +82,6 @@ public class Scheduler {
      * Awakens sleeping processes */
     void switchProcess()
     {
-//        wakeProcess();
 
         OSPrinter.println("Scheduler: switch process");
 
@@ -94,6 +96,8 @@ public class Scheduler {
 
         OSPrinter.println(runningPCB.getPriority().toString() + " process list: " + priority);
         OSPrinter.println("Running PCB: " + runningPCB);
+
+        wakeProcess(); // TODO the process somehow sleeps itself when it's switched to next
     }
 
     private Queue<PCB> getPriorityQueue(PCB pcb) {
@@ -111,9 +115,11 @@ public class Scheduler {
     /** Stop currentPCB, add it to the {@code sleeping} queue and set the next process to run */
      void sleep(int milliseconds) {
         if(runningPCB.isSleeping())
-            throw new RuntimeException("Sleeping process called function"); // TODO make new exception like 'sleeping process called function'
-        if(runningPCB.getPid() != OS.callerPid)
-            OSPrinter.print("Non-running process called function");
+            throw new RuntimeException("Sleeping process called function");
+//        if(runningPCB.getPid() != OS.callerPid){ //TODO this is a band-aid and doesnt even work every time
+//            OSPrinter.print("Non-running process called function");
+//            return;
+//        }
 
         OSPrinter.printf("Scheduler{%s}: sleep\n", runningPCB);
 
