@@ -7,7 +7,7 @@ public class GoodbyeWorld extends UserlandProcess {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            OS.sleep(5000);
+            OS.sleep(5000, this.pid); // we need to interrupt the thread
             cooperate();
         }
     }

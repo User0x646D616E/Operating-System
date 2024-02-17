@@ -61,36 +61,30 @@ public class Scheduler {
         return up.pid;
     }
 
+    /** Wake sleeping processes with time to wake <= current time */
     private void wakeProcess() {
-        while(true){
-            PCB peek = sleeping.peek();
-            if(peek == null) return;
+        PCB peek;
+        while((peek = sleeping.peek()) != null)
+        {
+            if(peek.timeToWake <= clock.millis()){
+                /* Wake process */
 
-            if(peek.timeToWake <= clock.millis())
                 sleeping.poll();
+            }
             else break;
         }
-//        sleeping.removeIf(); // maybe
-        OSPrinter.println("Sleeping process list: " + sleeping);
     }
 
     /** Switches currently running process.
      * Awakens sleeping processes */
-    public void switchProcess()
+    void switchProcess()
     {
 //        wakeProcess();
 
         OSPrinter.println("Scheduler: switch process");
 
         /* Get the processes priority */
-        Queue<PCB> priority;
-        String priorityName;
-        switch (runningPCB.getPriority()) {
-            case REALTIME -> { priority = realTime; priorityName = "Real time"; }
-            case INTERACTIVE -> { priority = interactive; priorityName = "Interactive"; }
-            case BACKGROUND -> { priority = background; priorityName = "background"; }
-            default -> throw new RuntimeException("PCB priority not set");
-        }
+        Queue<PCB> priority = getPriorityQueue(runningPCB);
 
         priority.remove();
         if(!runningPCB.isDone() && !runningPCB.isSleeping())
@@ -98,14 +92,28 @@ public class Scheduler {
 
         runningPCB = priority.peek();
 
-        OSPrinter.println(priorityName + " process list: " + priority);
+        OSPrinter.println(runningPCB.getPriority().toString() + " process list: " + priority);
         OSPrinter.println("Running PCB: " + runningPCB);
     }
 
+    private Queue<PCB> getPriorityQueue(PCB pcb) {
+        /* Get the processes priority */
+        Queue<PCB> priority;
+        switch (runningPCB.getPriority()) {
+            case REALTIME -> priority = realTime;
+            case INTERACTIVE -> priority = interactive;
+            case BACKGROUND -> priority = background;
+            default -> throw new RuntimeException("PCB priority not set");
+        }
+        return priority;
+    }
+
     /** Stop currentPCB, add it to the {@code sleeping} queue and set the next process to run */
-    public void sleep(int milliseconds) {
-        if(runningPCB.getPriority() == OS.Priority.SLEEPING)
-            return; // TODO make new exception 'sleeping process called function'
+     void sleep(int milliseconds) {
+        if(runningPCB.isSleeping())
+            throw new RuntimeException("Sleeping process called function"); // TODO make new exception like 'sleeping process called function'
+        if(runningPCB.getPid() != OS.callerPid)
+            OSPrinter.print("Non-running process called function");
 
         OSPrinter.printf("Scheduler{%s}: sleep\n", runningPCB);
 
@@ -114,13 +122,6 @@ public class Scheduler {
         sleeping.add(runningPCB);
 
         switchProcess(); // take it off the list and run next process
-
-        /* TODO Works but needs to be faster */
-        try {
-            Thread.sleep(quantum + 1); // +1 because it can be a race case?
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
 
         OSPrinter.println("Sleeping process list: " + sleeping);
         OSPrinter.println("");

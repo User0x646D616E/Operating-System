@@ -67,15 +67,21 @@ public abstract class UserlandProcess implements Runnable {
      */
     void start() { semaphore.release(); }
 
-//    /**
-//     * TODO Stops thread from running main process, switches processes and waits to be started again
-//     * how do you make the running thread call stop unless it calls cooperate
-//     */
-//    void stop() { semaphore.drainPermits(); }
+    /**
+     * TODO Stops thread from running main process, switches processes and waits to be started again
+     * how do you make the running thread call stop unless it calls cooperate
+     */
+    void stop() {
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
    /**
     * Sets quantumExpired, indicating that this processes quantum has expired.
-    * Stops when thread hits cooperate
+    * Waits for thread to hit cooperate to stop
     */
    void requestStop() { quantumExpired = true; }
 

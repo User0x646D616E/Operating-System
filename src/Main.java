@@ -7,8 +7,10 @@ public class Main {
         OS.startup(new HelloWorld());
         OS.createProcess(new GoodbyeWorld());
         OS.createProcess(new GoodbyeWorld());
-        OS.createProcess(new HelloWorld());
-        OS.createProcess(new Calculate(Calculate.Equation.FIBBONACI));
-        OS.createProcess(new Calculate(Calculate.Equation.NEXTPRIME));
+        OS.createProcess(new GoodbyeWorld());
+        OS.createProcess(new GoodbyeWorld());
+        OS.createProcess(new GoodbyeWorld());
+//        OS.createProcess(new HelloWorld());
+//        OS.createProcess(new GoodbyeWorld());
     }
 }

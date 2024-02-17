@@ -1,11 +1,11 @@
 public class PCB {
     static int nextpid = 0;
-    private int pid;
+    private final int pid;
     /** note: can wake up if time >= time to wake*/
     long timeToWake; // Time until the process can be awoken
     private boolean isSleeping = false;
 
-    private UserlandProcess up;
+    private final UserlandProcess up;
 
     private OS.Priority priority;
 
@@ -15,6 +15,14 @@ public class PCB {
         this.up = up;
     }
 
+    public UserlandProcess getUp() {
+        return up;
+    }
+
+    public int getPid() {
+        return pid;
+    }
+
     public boolean isSleeping() {
         return isSleeping;
     }
@@ -22,12 +30,11 @@ public class PCB {
     /** Stop process status to sleeping and stop process */
     public void isSleeping(boolean isSleeping){
         this.isSleeping = isSleeping;
-        if(isSleeping) requestStop();
     }
 
-//    void stop(){
-//        up.stop();
-//    }
+    void stop(){
+        up.stop();
+    }
 
     void requestStop(){
         up.requestStop();
@@ -59,6 +66,6 @@ public class PCB {
 
     @Override
     public String toString() {
-        return up.toString();
+        return up.toString() + " pid: " + pid;
     }
 }

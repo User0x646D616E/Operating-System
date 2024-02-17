@@ -12,6 +12,9 @@ public class OS {
         SLEEP,
         SHUTDOWN,
     }
+
+    /** The pid of the userland process that called an OS method */
+    static int callerPid;
     /** System call to be executed by the Kernel */
     static CallType currentCall;
 
@@ -27,7 +30,6 @@ public class OS {
         REALTIME,
         INTERACTIVE,
         BACKGROUND,
-        SLEEPING,
     }
 
 
@@ -98,24 +100,28 @@ public class OS {
         waitForKernel();
     }
 
-    static void sleep(int milliseconds) {
-        OSPrinter.printf("\nOS: Sleep{%s} -> ", Kernel.scheduler.runningPCB);
+    static void sleep(int milliseconds, int identity) {
+        PCB runningPCB = Kernel.scheduler.runningPCB;
+        OSPrinter.printf("\nOS: Sleep{%s} -> ", runningPCB);
         currentCall = CallType.SLEEP;
+        callerPid = identity;
 
         params.clear();
         params.add(milliseconds);
         kernel.start();
 
         waitForKernel();
+
+        runningPCB.stop();
     }
 
     /** Wait for the {@code kernel} thread to finish the execution */
-    private static void waitForKernel() {
+    static void waitForKernel() {
         synchronized (lock){
             try {
                 lock.wait();
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                OSPrinter.println("Thread interrupted");
             }
         }
     }
