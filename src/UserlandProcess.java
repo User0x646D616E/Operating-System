@@ -3,7 +3,7 @@ import java.util.concurrent.Semaphore;
 public abstract class UserlandProcess implements Runnable {
     private final Thread thread;
     Semaphore semaphore;
-    int pid; //TODO this
+    int pid;
 
     boolean quantumExpired;
 
@@ -19,7 +19,8 @@ public abstract class UserlandProcess implements Runnable {
         quantumExpired = false;
 
         thread.start();
-        /* Wait for thread to become avalabe */
+
+        /* Wait for thread to become available */
         while(thread.getState() == Thread.State.NEW) {Thread.onSpinWait();}
     }
 
@@ -29,44 +30,22 @@ public abstract class UserlandProcess implements Runnable {
     public void run()
     {
         try {
-            semaphore.acquire(); // wait until os is ready
+            semaphore.acquire(); // wait until OS is ready and start is called
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        start(); // so main can run
         main();
     }
 
-    /**
-     * releases (increments) the semaphore, allowing this thread to run
-     */
-    void start()
-    {
-       semaphore.release();
-    }
-
-    /**
-     * TODO Stops thread from running main process, switches processes and waits to be started again
-     * how do you make the running thread call stop unless it calls cooperate
-     */
-    void stop() {
-        semaphore.drainPermits();
-        try {
-            semaphore.acquire();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        semaphore.release();
-    }
-
    /**
-    * switches process when quantum is expired and waits to be scheduled
+    * Halts process if quantum expired or has no available permits
     */
      boolean cooperate() {
         if(quantumExpired) {
-           OS.switchProcess(); // calls stop to process
+           OS.switchProcess();
            quantumExpired = false;
 
+            /* Stop process */
             try {
                 semaphore.acquire();
             } catch (InterruptedException e) {
@@ -78,19 +57,27 @@ public abstract class UserlandProcess implements Runnable {
     }
 
     /** Wait until quantum expired to continue */
-    void waitForInterrupt() {
+    void cooperateOnInterrupt() {
         while(!cooperate())
             Thread.onSpinWait();
     }
+
+    /**
+     * releases (increments) the semaphore, allowing this thread to run
+     */
+    void start() { semaphore.release(); }
+
+//    /**
+//     * TODO Stops thread from running main process, switches processes and waits to be started again
+//     * how do you make the running thread call stop unless it calls cooperate
+//     */
+//    void stop() { semaphore.drainPermits(); }
 
    /**
     * Sets quantumExpired, indicating that this processes quantum has expired.
     * Stops when thread hits cooperate
     */
-   void requestStop()
-   {
-       quantumExpired = true;
-   }
+   void requestStop() { quantumExpired = true; }
 
 
    /**

@@ -8,7 +8,7 @@ public class HelloWorld extends UserlandProcess {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-           waitForInterrupt();
+           cooperateOnInterrupt();
         }
     }
 }

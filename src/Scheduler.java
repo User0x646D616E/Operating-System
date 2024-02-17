@@ -1,6 +1,5 @@
 import java.time.Clock;
 import java.util.*;
-import java.util.function.Predicate;
 
 public class Scheduler {
     /** Queue of processes the Scheduler can access with real time priority */
@@ -69,9 +68,10 @@ public class Scheduler {
 
             if(peek.timeToWake <= clock.millis())
                 sleeping.poll();
-            else return;
+            else break;
         }
 //        sleeping.removeIf(); // maybe
+        OSPrinter.println("Sleeping process list: " + sleeping);
     }
 
     /** Switches currently running process.
@@ -81,8 +81,6 @@ public class Scheduler {
 //        wakeProcess();
 
         OSPrinter.println("Scheduler: switch process");
-
-        runningPCB.requestStop();
 
         /* Get the processes priority */
         Queue<PCB> priority;
@@ -101,11 +99,11 @@ public class Scheduler {
         runningPCB = priority.peek();
 
         OSPrinter.println(priorityName + " process list: " + priority);
+        OSPrinter.println("Running PCB: " + runningPCB);
     }
 
     /** Stop currentPCB, add it to the {@code sleeping} queue and set the next process to run */
-    public void sleep(int milliseconds)
-    {
+    public void sleep(int milliseconds) {
         if(runningPCB.getPriority() == OS.Priority.SLEEPING)
             return; // TODO make new exception 'sleeping process called function'
 
@@ -117,9 +115,15 @@ public class Scheduler {
 
         switchProcess(); // take it off the list and run next process
 
+        /* TODO Works but needs to be faster */
+        try {
+            Thread.sleep(quantum + 1); // +1 because it can be a race case?
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         OSPrinter.println("Sleeping process list: " + sleeping);
         OSPrinter.println("");
     }
-
 }
 

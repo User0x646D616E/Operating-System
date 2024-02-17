@@ -7,17 +7,8 @@ public class GoodbyeWorld extends UserlandProcess {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
+            OS.sleep(5000);
             cooperate();
         }
-    }
-
-    void function(String str){
-        try {
-            System.out.println(str);
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        cooperate();
     }
 }

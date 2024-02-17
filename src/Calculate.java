@@ -31,7 +31,7 @@ public class Calculate extends UserlandProcess{
                 throw new RuntimeException(e);
             }
 
-            OS.sleep(5000);
+            OS.sleep(1000000);
             cooperate();
         }
     }
@@ -52,7 +52,7 @@ public class Calculate extends UserlandProcess{
 
 //            OS.sleep(1000);
 //            cooperate();
-            waitForInterrupt();
+            cooperateOnInterrupt();
         }
     }
 

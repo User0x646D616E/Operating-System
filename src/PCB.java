@@ -19,15 +19,15 @@ public class PCB {
         return isSleeping;
     }
 
-    /** Stop process and tuck it in and give it a kiss goodnight */
+    /** Stop process status to sleeping and stop process */
     public void isSleeping(boolean isSleeping){
-//        if(isSleeping) stop();
         this.isSleeping = isSleeping;
+        if(isSleeping) requestStop();
     }
 
-    void stop(){
-        up.stop();
-    }
+//    void stop(){
+//        up.stop();
+//    }
 
     void requestStop(){
         up.requestStop();
