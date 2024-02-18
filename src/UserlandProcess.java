@@ -6,6 +6,9 @@ public abstract class UserlandProcess implements Runnable {
     int pid;
 
     boolean quantumExpired;
+    int timeoutCounter = 0;
+
+    OS.Priority priority; //TODO for testing
 
 
     /**
@@ -42,6 +45,7 @@ public abstract class UserlandProcess implements Runnable {
     */
      boolean cooperate() {
         if(quantumExpired) {
+            timeoutCounter++;
            OS.switchProcess();
            quantumExpired = false;
 
@@ -63,7 +67,7 @@ public abstract class UserlandProcess implements Runnable {
     }
 
     /**
-     * releases (increments) the semaphore, allowing this thread to run
+     * Releases (increments) the semaphore, allowing this thread to run
      */
     void start() { semaphore.release(); }
 
@@ -104,4 +108,7 @@ public abstract class UserlandProcess implements Runnable {
        return !thread.isAlive();
    }
 
+   void setPriority(OS.Priority priority){ //TODO for testing
+       this.priority = priority;
+   }
 }

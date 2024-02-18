@@ -16,4 +16,9 @@ public class World extends UserlandProcess {
             cooperate();
         }
     }
+
+    @Override
+    void setPriority(OS.Priority priority){ // TODO for testing
+        str = priority.name();
+    }
 }

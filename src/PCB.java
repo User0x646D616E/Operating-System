@@ -62,6 +62,7 @@ public class PCB {
 
     public void setPriority(OS.Priority priority) {
         this.priority = priority;
+        up.setPriority(priority); //TODO for testing
     }
 
     @Override

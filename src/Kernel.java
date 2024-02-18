@@ -41,9 +41,7 @@ public class Kernel implements Runnable {
             OSPrinter.print("Kernel: Running " + OS.currentCall + " -> ");
 
             switch (OS.currentCall) {
-                case CREATEPROCESS -> {
-                    OS.returnValue = scheduler.createProcess((UserlandProcess) OS.params.get(0));
-                }
+                case CREATEPROCESS -> OS.returnValue = scheduler.createProcess((UserlandProcess) OS.params.get(0), (OS.Priority) OS.params.get(1));
                 case SWITCHPROCESS -> scheduler.switchProcess();
                 case SLEEP -> scheduler.sleep((Integer) OS.params.get(0));
                 case SHUTDOWN -> { return; }

@@ -60,15 +60,7 @@ public class OS {
      * @param up {@code UserlandProcess} to be created
      */
     public static void createProcess(UserlandProcess up) {
-        OSPrinter.printf("\nOS: Create process{%s} -> ", up);
-        currentCall = CallType.CREATEPROCESS;
-
-        params.clear();
-        params.add(up); // sets params for kernel
-        params.add(Priority.INTERACTIVE);
-        kernel.start();
-
-        waitForKernel();
+        createProcess(up, Priority.INTERACTIVE);
     }
     /**
      * Tells our Kernel to create a new {@code UserlandProcess} with set priority
@@ -77,7 +69,7 @@ public class OS {
      * @param up {@code UserlandProcess} to be created
      *
      */
-    public static void createProcess(UserlandProcess up, Priority priority)
+    public static void createProcess(UserlandProcess up, Priority priority) // TODO implement create process with priority
     {
         OSPrinter.printf("\nOS: Create process{%s} -> ", up);
         currentCall = CallType.CREATEPROCESS;

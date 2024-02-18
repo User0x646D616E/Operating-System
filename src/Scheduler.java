@@ -31,7 +31,10 @@ public class Scheduler {
 
         TimerTask requestStop = new TimerTask() {
             @Override
-            public void run() {
+            public void run()
+            {
+                demote();
+
                 if(runningPCB != null)
                     runningPCB.requestStop(); // will switch processes
             }
@@ -40,23 +43,42 @@ public class Scheduler {
         interruptTimer.scheduleAtFixedRate(requestStop, 1000, quantum);
     }
 
+    private void demote(){
+        if(runningPCB.getUp().timeoutCounter >= 5) {
+            if(runningPCB.getPriority() == OS.Priority.REALTIME)
+                runningPCB.setPriority(OS.Priority.INTERACTIVE);
+            else runningPCB.setPriority(OS.Priority.BACKGROUND);
+            runningPCB.getUp().timeoutCounter = 0;
+        }
+    }
+
 
     /** Adds process to our {@code process list}, if nothing else is running it runs it
      * @return pid of the process */
-    public int createProcess(UserlandProcess up)
+    public int createProcess(UserlandProcess up, OS.Priority priority)
     {
         OSPrinter.println("Scheduler: Create process");
 
+        Queue<PCB> priorityQueue;
+        switch (priority){
+            case REALTIME -> priorityQueue = realTime;
+            case INTERACTIVE -> priorityQueue = interactive;
+            case BACKGROUND -> priorityQueue = background;
+            default -> throw new RuntimeException("PCB priority not set");
+        }
+
         PCB newPCB = new PCB(up);
-        newPCB.setPriority(OS.Priority.INTERACTIVE);
-        interactive.add(newPCB);
+        newPCB.setPriority(priority);
+        priorityQueue.add(newPCB);
 
         if(runningPCB == null)
             runningPCB = newPCB;
         else if(runningPCB.isDone())
             switchProcess();
 
-        OSPrinter.println("Interactive process list: " + interactive); OSPrinter.println("");
+        OSPrinter.println( "Real time process list: " + realTime);
+        OSPrinter.println( "Interactive process list: " + interactive);
+        OSPrinter.println( "Background process list: " + background);
 
         return up.pid;
     }
@@ -68,10 +90,11 @@ public class Scheduler {
         {
             if (peek.timeToWake <= clock.millis()) {
                 /* Wake process */
+                peek.isSleeping(false);
                 Queue<PCB> priority = getPriorityQueue(peek);
                 priority.add(sleeping.poll());
                 OSPrinter.println("Waking process: " + peek);
-                OSPrinter.println("Interactive process list: " + interactive);
+                OSPrinter.println(peek.getPriority() + " process list: " + priority);
                 OSPrinter.println("Sleeping process list: " + sleeping);
             }
             else break;
@@ -82,28 +105,82 @@ public class Scheduler {
      * Awakens sleeping processes */
     void switchProcess()
     {
+        wakeProcess();
 
         OSPrinter.println("Scheduler: switch process");
 
         /* Get the processes priority */
-        Queue<PCB> priority = getPriorityQueue(runningPCB);
+        Queue<PCB> priority = choosePriority();
+        if(priority == null) return; // no need to switch
 
-        priority.remove();
+        PCB newPCB = priority.remove();
         if(!runningPCB.isDone() && !runningPCB.isSleeping())
-            priority.add(runningPCB);
+            priority.add(newPCB);
 
         runningPCB = priority.peek();
 
-        OSPrinter.println(runningPCB.getPriority().toString() + " process list: " + priority);
-        OSPrinter.println("Running PCB: " + runningPCB);
+        OSPrinter.println("Real time process list: " + realTime);
+        OSPrinter.println("Interactive process list: " + interactive);
+        OSPrinter.println("Background process list: " + background);
 
-        wakeProcess(); // TODO the process somehow sleeps itself when it's switched to next
+        OSPrinter.println("Running PCB: " + runningPCB);
     }
 
+    private Queue<PCB> choosePriority()
+    {
+        Random random = new Random();
+        int totalWeight = 6 + 3 + 1;
+        int randomNumber = random.nextInt(totalWeight) + 1;
+
+        if (randomNumber <= 6 && !realTime.isEmpty()) {
+            return realTime;
+        } else if (randomNumber <= 9 && !interactive.isEmpty()) {
+            return interactive;
+        } else if (!background.isEmpty()) {
+            return background;
+        } else if (!realTime.isEmpty()) {
+            return realTime;
+        } else if (!interactive.isEmpty()) {
+            return interactive;
+        } else {
+            return null; // All lists are empty
+        }
+    }
+
+//    private Queue<PCB> choosePriority()
+//    {
+//        Random rand = new Random();
+//        if(!realTime.isEmpty() && !interactive.isEmpty() && !background.isEmpty()) {
+//            int randInt = rand.nextInt(10) + 1;
+//
+//            if(randInt == 1) return background;
+//            if(randInt <= 4) return interactive;
+//            else return realTime;
+//        }
+//        if(!realTime.isEmpty() && interactive.isEmpty() && !background.isEmpty()) {
+//            int randInt = rand.nextInt(10) + 1;
+//
+//            if(randInt == 1) return background;
+//            else return realTime;
+//        }
+//        if(realTime.isEmpty() && !interactive.isEmpty() && !background.isEmpty()) {
+//            int randInt = rand.nextInt(4) + 1;
+//
+//            if(randInt == 1) return background;
+//            else return interactive;
+//        }
+//        if(realTime.isEmpty() && interactive.isEmpty() && !background.isEmpty())
+//            return background;
+//        else return null;
+//    }
+
+
+
+    /** returns the priority queue that pcb belongs to */
     private Queue<PCB> getPriorityQueue(PCB pcb) {
         /* Get the processes priority */
         Queue<PCB> priority;
-        switch (runningPCB.getPriority()) {
+        switch (pcb.getPriority()) {
             case REALTIME -> priority = realTime;
             case INTERACTIVE -> priority = interactive;
             case BACKGROUND -> priority = background;
