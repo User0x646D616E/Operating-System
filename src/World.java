@@ -19,6 +19,6 @@ public class World extends UserlandProcess {
 
     @Override
     void setPriority(OS.Priority priority){ // TODO for testing
-        str = priority.name();
+//        str = priority.name();
     }
 }

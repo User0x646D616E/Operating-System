@@ -67,6 +67,10 @@ public class PCB {
 
     @Override
     public String toString() {
-        return up.toString() + " pid: " + pid;
+        if(isSleeping)
+            return String.format("%s, pid:%s, Time to wake:%s",
+                    up.toString(), pid, timeToWake);
+        return String.format( "%s pid:%s",
+                up.toString(), pid);
     }
 }
