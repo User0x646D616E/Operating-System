@@ -1,3 +1,7 @@
+package UserLand;
+
+import KernelLand.OS;
+
 public class World extends UserlandProcess {
     String str;
 
@@ -18,7 +22,7 @@ public class World extends UserlandProcess {
     }
 
     @Override
-    void setPriority(OS.Priority priority){ // TODO for testing
+    public void setPriority(OS.Priority priority){ // TODO for testing
 //        str = priority.name();
     }
 }

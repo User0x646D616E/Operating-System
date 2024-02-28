@@ -1,9 +1,13 @@
+package UserLand;
+
+import KernelLand.OS;
+
 import java.util.concurrent.Semaphore;
 
 public abstract class UserlandProcess implements Runnable {
     private final Thread thread;
-    Semaphore semaphore;
-    int pid;
+    private final Semaphore semaphore;
+    public int pid;
 
     boolean quantumExpired;
     int timeoutCounter = 0;
@@ -33,7 +37,7 @@ public abstract class UserlandProcess implements Runnable {
     public void run()
     {
         try {
-            semaphore.acquire(); // wait until OS is ready and start is called
+            semaphore.acquire(); // wait until KernelLand.OS is ready and start is called
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -69,13 +73,13 @@ public abstract class UserlandProcess implements Runnable {
     /**
      * Releases (increments) the semaphore, allowing this thread to run
      */
-    void start() { semaphore.release(); }
+    public void start() { semaphore.release(); }
 
     /**
      * Stops thread from running main process, switches processes and waits to be started again
      *
      */
-    void stop() {
+    public void stop() {
         semaphore.drainPermits();
         try {
             semaphore.acquire();
@@ -88,7 +92,7 @@ public abstract class UserlandProcess implements Runnable {
     * Sets quantumExpired, indicating that this processes quantum has expired.
     * Waits for thread to hit cooperate to stop
     */
-   void requestStop() { quantumExpired = true; }
+   public void requestStop() { quantumExpired = true; }
 
 
    /**
@@ -103,12 +107,20 @@ public abstract class UserlandProcess implements Runnable {
    /**
     * @return true when the java thread is not alive
     */
-   boolean isDone()
+   public boolean isDone()
    {
        return !thread.isAlive();
    }
 
-   void setPriority(OS.Priority priority){ //TODO for testing
+   public void setPriority(OS.Priority priority){ //TODO for testing
        this.priority = priority;
    }
+
+    public int getTimeoutCounter() {
+        return timeoutCounter;
+    }
+
+    public void setTimeoutCounter(int timeoutCounter) {
+        this.timeoutCounter = timeoutCounter;
+    }
 }

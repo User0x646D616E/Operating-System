@@ -1,3 +1,7 @@
+package KernelLand;
+
+import UserLand.UserlandProcess;
+
 public class PCB {
     static int nextpid = 0;
     private final int pid;

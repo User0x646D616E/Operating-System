@@ -1,3 +1,5 @@
+package UserLand;
+
 public class Calculate extends UserlandProcess{
     enum Equation{
         NEXTPRIME,
@@ -31,7 +33,7 @@ public class Calculate extends UserlandProcess{
                 throw new RuntimeException(e);
             }
 
-//            OS.sleep(1000000);
+//            KernelLand.OS.sleep(1000000);
             cooperateOnInterrupt();
         }
     }
@@ -50,7 +52,7 @@ public class Calculate extends UserlandProcess{
                 throw new RuntimeException(e);
             }
 
-//            OS.sleep(1000);
+//            KernelLand.OS.sleep(1000);
 //            cooperate();
             cooperateOnInterrupt();
         }

@@ -1,14 +1,15 @@
-public class HelloWorld extends UserlandProcess {
+package UserLand;
+
+public class IdleProcess extends UserlandProcess{
     @Override
     void main() {
         while(true){
             try {
-                System.out.println("Hello World");
-                Thread.sleep(500);
+                Thread.sleep(25);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-           cooperateOnInterrupt();
+            cooperate();
         }
     }
 }

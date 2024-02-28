@@ -4,13 +4,31 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="Probabalistic sleep and demote are fully functional as far as i Know">
-      <change afterPath="$PROJECT_DIR$/src/Device.java" afterDir="false" />
+    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="Ready to implement devices">
+      <change afterPath="$PROJECT_DIR$/src/Devices/Device.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Devices/FakeFileSystem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Devices/IdException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Devices/RandomDevice.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Devices/UnitTests/UnitTest_FakeFileSystem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Devices/UnitTests/UnitTest_RandomDevice.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Devices/VFS.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/UserLand/FileTyper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OS.iml" beforeDir="false" afterPath="$PROJECT_DIR$/OS.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Calculate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/Calculate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Device.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GoodbyeWorld.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/GoodbyeWorld.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HelloWorld.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/HelloWorld.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/IdleProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/IdleProcess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Kernel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Kernel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/MinHeap.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PCB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PCB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/World.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/OS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/OSPrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/OSPrinter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PCB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/PCB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Scheduler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UserlandProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/UserlandProcess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/World.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,7 +45,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="285239ae26a060d0b8c8278cd5694a0565d2be7e" />
+        <entry key="$PROJECT_DIR$" value="testinFolderOrganization" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -36,7 +54,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="ProjectErrors" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -54,6 +72,10 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
@@ -72,7 +94,7 @@
     ]
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="OS" />
@@ -80,13 +102,77 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="UnitTest_FakeFileSystem.testClose" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="OS" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Devices.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Devices.UnitTests" />
+      <option name="MAIN_CLASS_NAME" value="Devices.UnitTests.UnitTest_FakeFileSystem" />
+      <option name="METHOD_NAME" value="testClose" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UnitTest_FakeFileSystem.testOpen" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="OS" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Devices.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Devices.UnitTests" />
+      <option name="MAIN_CLASS_NAME" value="Devices.UnitTests.UnitTest_FakeFileSystem" />
+      <option name="METHOD_NAME" value="testOpen" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UnitTest_FakeFileSystem.testRead" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="OS" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Devices.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Devices.UnitTests" />
+      <option name="MAIN_CLASS_NAME" value="Devices.UnitTests.UnitTest_FakeFileSystem" />
+      <option name="METHOD_NAME" value="testRead" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UnitTest_FakeFileSystem.testWrite" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="OS" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Devices.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="Devices.UnitTests" />
+      <option name="MAIN_CLASS_NAME" value="Devices.UnitTests.UnitTest_FakeFileSystem" />
+      <option name="METHOD_NAME" value="testWrite" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
-        <item itemvalue="Application.Main" />
-        <item itemvalue="Application.Main" />
-        <item itemvalue="Application.Main" />
-        <item itemvalue="Application.Main" />
+        <item itemvalue="JUnit.UnitTest_FakeFileSystem.testRead" />
+        <item itemvalue="JUnit.UnitTest_FakeFileSystem.testWrite" />
+        <item itemvalue="JUnit.UnitTest_FakeFileSystem.testClose" />
+        <item itemvalue="JUnit.UnitTest_FakeFileSystem.testOpen" />
       </list>
     </recent_temporary>
   </component>
@@ -180,7 +266,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708229336648</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Ready to implement devices">
+      <option name="closed" value="true" />
+      <created>1708746525370</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1708746525370</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -219,7 +313,8 @@
     <MESSAGE value="Sleep works with a new implementation of PCB.stop" />
     <MESSAGE value="Just prepared for testing" />
     <MESSAGE value="Probabalistic sleep and demote are fully functional as far as i Know" />
-    <option name="LAST_COMMIT_MESSAGE" value="Probabalistic sleep and demote are fully functional as far as i Know" />
+    <MESSAGE value="Ready to implement devices" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ready to implement devices" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

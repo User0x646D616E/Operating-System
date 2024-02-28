@@ -1,9 +1,13 @@
+package UserLand;
+
+import KernelLand.OS;
+
 public class GoodbyeWorld extends UserlandProcess {
     void main() {
         while(true){
             try {
                 System.out.println("Goodbye World");
-                Thread.sleep(500);
+                Thread.sleep(1);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

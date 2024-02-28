@@ -1,7 +1,12 @@
+package KernelLand;
+
+import UserLand.IdleProcess;
+import UserLand.UserlandProcess;
+
 import java.util.ArrayList;
 
 public class OS {
-    /** Our Kernel <3 */
+    /** Our KernelLand.Kernel <3 */
     private static Kernel kernel;
     private static final Object lock = new Object();
 
@@ -10,12 +15,17 @@ public class OS {
         CREATEPROCESS,
         SWITCHPROCESS,
         SLEEP,
+        OPEN,
+        CLOSE,
+        READ,
+        SEEK,
+        WRITE,
         SHUTDOWN,
     }
 
-    /** The pid of the userland process that called an OS method */
+    /** The pid of the userland process that called an KernelLand.OS method */
     static int callerPid;
-    /** System call to be executed by the Kernel */
+    /** System call to be executed by the KernelLand.Kernel */
     static CallType currentCall;
 
     /** Parameters of our system call {@code currentCall} */
@@ -23,7 +33,7 @@ public class OS {
     /** return value of our system call {@code currentCall} */
     static Object returnValue;
 
-    /** Priority of a {@code UserlandProcess}
+    /** Priority of a {@code UserLand.UserlandProcess}
      * determines runtime priority of the process
      * */
     public enum Priority {
@@ -34,44 +44,44 @@ public class OS {
 
 
     /**
-     *  Starts and initializes OS, running {@code UserlandProcess} init
+     *  Starts and initializes KernelLand.OS, running {@code UserLand.UserlandProcess} init
      *  initializes our {@code kernel} and runs {@code idleProcess}
      *
      * @param init process to be run at startup
      */
     public static void startup(UserlandProcess init) {
-        OSPrinter.println("OS: starting up :)");
+        OSPrinter.println("KernelLand.OS: starting up :)");
         kernel = new Kernel();
         params = new ArrayList<>();
 
         waitForKernel();
-        OSPrinter.println("\nOS: Kernel waiting to run\n");
+        OSPrinter.println("\nKernelLand.OS: KernelLand.Kernel waiting to run\n");
 
         createProcess(init);
         createProcess(new IdleProcess());
 
-        OSPrinter.println("\nOS: startup complete\n");
+        OSPrinter.println("\nKernelLand.OS: startup complete\n");
     }
 
     /**
-     * Tells our Kernel to create a new {@code UserlandProcess} with default priority interactive
-     * Sets our Shared Memory with our kernel - {@code CallType} and {@code params} - to request our {@code kernel} to create, and run, a new {@code UserlandProcess} up
+     * Tells our KernelLand.Kernel to create a new {@code UserLand.UserlandProcess} with default priority interactive
+     * Sets our Shared Memory with our kernel - {@code CallType} and {@code params} - to request our {@code kernel} to create, and run, a new {@code UserLand.UserlandProcess} up
      *
-     * @param up {@code UserlandProcess} to be created
+     * @param up {@code UserLand.UserlandProcess} to be created
      */
     public static void createProcess(UserlandProcess up) {
         createProcess(up, Priority.INTERACTIVE);
     }
     /**
-     * Tells our Kernel to create a new {@code UserlandProcess} with set priority
-     * Sets the Shared Memory with our kernel - {@code CallType} and {@code params} - to request our {@code kernel} to create, and run, a new {@code UserlandProcess} up
+     * Tells our KernelLand.Kernel to create a new {@code UserLand.UserlandProcess} with set priority
+     * Sets the Shared Memory with our kernel - {@code CallType} and {@code params} - to request our {@code kernel} to create, and run, a new {@code UserLand.UserlandProcess} up
      *
-     * @param up {@code UserlandProcess} to be created
+     * @param up {@code UserLand.UserlandProcess} to be created
      *
      */
     public static void createProcess(UserlandProcess up, Priority priority) // TODO implement create process with priority
     {
-        OSPrinter.printf("\nOS: Create process{%s} -> ", up);
+        OSPrinter.printf("\nKernelLand.OS: Create process{%s} -> ", up);
         currentCall = CallType.CREATEPROCESS;
 
         params.clear();
@@ -86,13 +96,13 @@ public class OS {
      * Tells our {@code kernel} to switch process'
      */
     public static void switchProcess() {
-        OSPrinter.print("\nOS: Switch process -> ");
+        OSPrinter.print("\nKernelLand.OS: Switch process -> ");
         currentCall = CallType.SWITCHPROCESS;
         kernel.start();
         waitForKernel();
     }
 
-    static void sleep(int milliseconds, int identity) {
+    public static void sleep(int milliseconds, int identity) {
         PCB runningPCB = Kernel.scheduler.runningPCB;
         OSPrinter.printf("\nOS: Sleep{%s} -> ", runningPCB);
         currentCall = CallType.SLEEP;
@@ -107,6 +117,41 @@ public class OS {
         runningPCB.stop();
     }
 
+    public static int open(String s) {
+        PCB runningPCB = Kernel.scheduler.runningPCB;
+        OSPrinter.printf("\nOS: Sleep{%s} -> ", runningPCB);
+
+        currentCall = CallType.OPEN;
+
+        params.clear();
+        params.add(s);
+        kernel.start();
+
+        waitForKernel();
+        return (int) returnValue;
+    }
+
+    public static void close(int id) {
+
+    }
+
+    public static void read(int id, int size) {
+
+    }
+
+    public static void seek(int id, int to) {
+
+    }
+
+    public static int write(int id, byte[] data) {
+         return 0;
+    }
+
+
+
+
+
+
     /** Wait for the {@code kernel} thread to finish the execution */
     static void waitForKernel() {
         synchronized (lock){
@@ -118,7 +163,7 @@ public class OS {
         }
     }
 
-    /** notify the OS to continue execution */
+    /** notify the KernelLand.OS to continue execution */
     static void notifyComplete() {
         lock.notify();
     }

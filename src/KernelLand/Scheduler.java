@@ -1,25 +1,27 @@
+package KernelLand;
+
 import java.time.Clock;
 import java.util.*;
 
+import UserLand.UserlandProcess;
+
 public class Scheduler {
-    /** Queue of processes the Scheduler can access with real time priority */
+    /** Queue of processes the KernelLand.Scheduler can access with real time priority */
     private final Queue<PCB> realTime;
-    /** Queue of processes the Scheduler can access with interactive priority */
+    /** Queue of processes the KernelLand.Scheduler can access with interactive priority */
     private final Queue<PCB> interactive;
-    /** Queue of processes the Scheduler can access with background priority */
+    /** Queue of processes the KernelLand.Scheduler can access with background priority */
     private final Queue<PCB> background;
     /** Queue of sleeping processes */
     private final PriorityQueue<PCB> sleeping;
 
     private final Clock clock = Clock.systemUTC();
 
-    /** Time in until next interrupt, in ms */
-    private final long quantum = 250;
-
     /** Currently running process */
     public PCB runningPCB;
 
-    /** Creates a new KernelLand.Scheduler */
+    /** Creates a new KernelLand.KernelLand.Scheduler */
+
     Scheduler()
     {
         realTime = new LinkedList<>();
@@ -33,22 +35,25 @@ public class Scheduler {
             @Override
             public void run()
             {
-                demote();
+                demote(5);
 
                 if(runningPCB != null)
                     runningPCB.requestStop(); // will switch processes
             }
         };
 
+        /* Time in until next interrupt, in ms */
+        long quantum = 250;
         interruptTimer.scheduleAtFixedRate(requestStop, 1000, quantum);
     }
 
-    private void demote(){
-        if(runningPCB.getUp().timeoutCounter >= 5) {
+    /** Demote a thread after its {@code getTimeoutCounter} is greater than MAX_TIMEOUT */
+    private void demote(final int MAX_TIMEOUT){
+        if(runningPCB.getUp().getTimeoutCounter() >= MAX_TIMEOUT) {
             if(runningPCB.getPriority() == OS.Priority.REALTIME)
                 runningPCB.setPriority(OS.Priority.INTERACTIVE);
             else runningPCB.setPriority(OS.Priority.BACKGROUND);
-            runningPCB.getUp().timeoutCounter = 0;
+            runningPCB.getUp().setTimeoutCounter(0);
         }
     }
 
@@ -57,14 +62,14 @@ public class Scheduler {
      * @return pid of the process */
     public int createProcess(UserlandProcess up, OS.Priority priority)
     {
-        OSPrinter.println("Scheduler: Create process");
+        OSPrinter.println("KernelLand.Scheduler: Create process");
 
         Queue<PCB> priorityQueue;
         switch (priority){
             case REALTIME -> priorityQueue = realTime;
             case INTERACTIVE -> priorityQueue = interactive;
             case BACKGROUND -> priorityQueue = background;
-            default -> throw new RuntimeException("PCB priority not set");
+            default -> throw new RuntimeException("KernelLand.PCB priority not set");
         }
 
         PCB newPCB = new PCB(up);
@@ -83,17 +88,18 @@ public class Scheduler {
         return up.pid;
     }
 
-    /** Wake sleeping processes with time to wake <= current time */
+    /** Wake sleeping processes when  */
     private void wakeProcess() {
         PCB peek;
         while ((peek = sleeping.peek()) != null)
         {
-            if (peek.timeToWake <= clock.millis()) {
+            long currentTime = clock.millis();
+            if(peek.timeToWake <= currentTime) {
                 /* Wake process */
                 peek.isSleeping(false);
                 Queue<PCB> priority = getPriorityQueue(peek);
                 priority.add(sleeping.poll());
-                OSPrinter.println("Waking process: " + peek);
+                OSPrinter.println("Waking process: " + peek + "time: " + currentTime);
                 OSPrinter.println(peek.getPriority() + " process list: " + priority);
                 OSPrinter.println("Sleeping process list: " + sleeping);
             }
@@ -107,7 +113,7 @@ public class Scheduler {
     {
         wakeProcess();
 
-        OSPrinter.println("Scheduler: switch process");
+        OSPrinter.println("KernelLand.Scheduler: switch process");
 
         /* Get the processes priority */
         Queue<PCB> priority = choosePriority();
@@ -123,7 +129,7 @@ public class Scheduler {
         OSPrinter.println("Interactive process list: " + interactive);
         OSPrinter.println("Background process list: " + background);
 
-        OSPrinter.println("Running PCB: " + runningPCB);
+        OSPrinter.println("Running KernelLand.PCB: " + runningPCB);
     }
 
     private Queue<PCB> choosePriority()
@@ -147,7 +153,7 @@ public class Scheduler {
         }
     }
 
-//    private Queue<PCB> choosePriority()
+//    private Queue<KernelLand.PCB> choosePriority()
 //    {
 //        Random rand = new Random();
 //        if(!realTime.isEmpty() && !interactive.isEmpty() && !background.isEmpty()) {
@@ -184,7 +190,7 @@ public class Scheduler {
             case REALTIME -> priority = realTime;
             case INTERACTIVE -> priority = interactive;
             case BACKGROUND -> priority = background;
-            default -> throw new RuntimeException("PCB priority not set");
+            default -> throw new RuntimeException("KernelLand.PCB priority not set");
         }
         return priority;
     }
@@ -193,12 +199,12 @@ public class Scheduler {
      void sleep(int milliseconds) {
         if(runningPCB.isSleeping())
             throw new RuntimeException("Sleeping process called function");
-//        if(runningPCB.getPid() != OS.callerPid){ //TODO this is a band-aid and doesnt even work every time
-//            OSPrinter.print("Non-running process called function");
+////        if(runningPCB.getPid() != KernelLand.OS.callerPid){ //TODO this is a band-aid and doesn't even work every time
+////            KernelLand.OSPrinter.print("No running process called function");
 //            return;
 //        }
 
-        OSPrinter.printf("Scheduler{%s}: sleep\n", runningPCB);
+        OSPrinter.printf("KernelLand.Scheduler{%s}: sleep\n", runningPCB);
 
         runningPCB.isSleeping(true);
         runningPCB.setTimeToWake(clock.millis() + milliseconds);
