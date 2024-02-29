@@ -37,7 +37,7 @@ public class RandomDevice implements Device {
 
     /**
      *
-     * @param id of the random device to be closed
+     * @param id of the {@code RandomDevice} to be closed
      */
     @Override
     public void close(int id) {
@@ -48,9 +48,12 @@ public class RandomDevice implements Device {
     }
 
     /**
-     * @param id
-     * @param size
-     * @return
+     * Reads {@code size} random bytes, from device with input id,
+     * and returns them in an array.
+     *
+     * @param id of the Random Device
+     * @param size size to be read, in bytes
+     * @return array of random bytes
      */
     @Override
     public byte[] read(int id, int size) {

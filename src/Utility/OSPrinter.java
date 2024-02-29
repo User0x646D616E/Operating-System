@@ -1,4 +1,4 @@
-package KernelLand;
+package Utility;
 
 import java.io.*;
 
@@ -17,13 +17,13 @@ public class OSPrinter {
         }
     }
 
-    static void print(String str){
+    public static void print(String str){
         printStream.print(str);
     }
-    static void println(String str){
+    public static void println(String str){
         printStream.println(str);
     }
-    static void printf(String str, Object... args){
+    public static void printf(String str, Object... args){
         printStream.printf(str, args);
     }
 }

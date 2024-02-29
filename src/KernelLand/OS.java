@@ -2,8 +2,10 @@ package KernelLand;
 
 import UserLand.IdleProcess;
 import UserLand.UserlandProcess;
+import Utility.OSPrinter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class OS {
     /** Our KernelLand.Kernel <3 */
@@ -82,8 +84,8 @@ public class OS {
     public static void createProcess(UserlandProcess up, Priority priority) // TODO implement create process with priority
     {
         OSPrinter.printf("\nKernelLand.OS: Create process{%s} -> ", up);
-        currentCall = CallType.CREATEPROCESS;
 
+        currentCall = CallType.CREATEPROCESS;
         params.clear();
         params.add(up);
         params.add(priority);
@@ -104,10 +106,11 @@ public class OS {
 
     public static void sleep(int milliseconds, int identity) {
         PCB runningPCB = Kernel.scheduler.runningPCB;
+
         OSPrinter.printf("\nOS: Sleep{%s} -> ", runningPCB);
+
         currentCall = CallType.SLEEP;
         callerPid = identity;
-
         params.clear();
         params.add(milliseconds);
         kernel.start();
@@ -118,39 +121,53 @@ public class OS {
     }
 
     public static int open(String s) {
-        PCB runningPCB = Kernel.scheduler.runningPCB;
-        OSPrinter.printf("\nOS: Sleep{%s} -> ", runningPCB);
+        OSPrinter.printf("\nOS: open{%s} -> ", Kernel.scheduler.runningPCB);
 
-        currentCall = CallType.OPEN;
-
-        params.clear();
-        params.add(s);
-        kernel.start();
-
-        waitForKernel();
-        return (int) returnValue;
+        callKernel(CallType.OPEN, s);
+        return (int)returnValue;
     }
 
     public static void close(int id) {
+        OSPrinter.printf("\nOS: close{%s} -> ", Kernel.scheduler.runningPCB);
 
+        callKernel(CallType.CLOSE, id);
     }
 
     public static void read(int id, int size) {
+        OSPrinter.printf("\nOS: read{%s} -> ", Kernel.scheduler.runningPCB);
 
+        callKernel(CallType.READ, id, size);
     }
 
     public static void seek(int id, int to) {
+        OSPrinter.printf("\nOS: seek{%s} -> ", Kernel.scheduler.runningPCB);
 
+        callKernel(CallType.SEEK, id, to);
     }
 
     public static int write(int id, byte[] data) {
-         return 0;
+        OSPrinter.printf("\nOS: write{%s} -> ", Kernel.scheduler.runningPCB);
+
+        callKernel(CallType.WRITE, id, data);
+        return (int)returnValue;
     }
 
+    /**
+     * Set {@code currentCall} and add parameters to shared memory {@code params}
+     * then, call the kernel and wait for execution.
+     *
+     * @param callType the call type
+     * @param parameters the parameters
+     */
+    private static void callKernel(CallType callType, Object... parameters) {
+        currentCall = callType;
 
+        params.clear();
+        params.addAll(Arrays.asList(parameters));
+        kernel.start();
 
-
-
+        waitForKernel();
+    }
 
     /** Wait for the {@code kernel} thread to finish the execution */
     static void waitForKernel() {

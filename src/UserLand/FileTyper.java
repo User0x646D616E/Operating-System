@@ -10,18 +10,19 @@ import static KernelLand.OS.*;
 public class FileTyper extends UserlandProcess {
     @Override
     void main() {
-        FakeFileSystem fileSystem = new FakeFileSystem();
         Scanner scanner = new Scanner(System.in);
-        int id = fileSystem.open("FileTyper.txt");
+
+        int id= open("file FileTyper.txt");
         byte[] buffer;
 
         while(true)
         {
-            System.out.print("Type into file: ");
+            System.out.print("Type into the file: ");
             String inputString = scanner.nextLine();
             
             buffer = inputString.getBytes();
-            fileSystem.write(id, buffer);
+            write(id, buffer);
+            write(id, new byte[]{'\n'});
 
             sleep(1000, id);
             cooperate();

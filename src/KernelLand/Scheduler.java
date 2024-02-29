@@ -4,6 +4,7 @@ import java.time.Clock;
 import java.util.*;
 
 import UserLand.UserlandProcess;
+import Utility.OSPrinter;
 
 public class Scheduler {
     /** Queue of processes the KernelLand.Scheduler can access with real time priority */
@@ -138,19 +139,18 @@ public class Scheduler {
         int totalWeight = 6 + 3 + 1;
         int randomNumber = random.nextInt(totalWeight) + 1;
 
-        if (randomNumber <= 6 && !realTime.isEmpty()) {
+        if (randomNumber <= 6 && !realTime.isEmpty())
             return realTime;
-        } else if (randomNumber <= 9 && !interactive.isEmpty()) {
+        else if (randomNumber <= 9 && !interactive.isEmpty())
             return interactive;
-        } else if (!background.isEmpty()) {
+        else if (!background.isEmpty())
             return background;
-        } else if (!realTime.isEmpty()) {
+        else if (!realTime.isEmpty())
             return realTime;
-        } else if (!interactive.isEmpty()) {
+        else if (!interactive.isEmpty())
             return interactive;
-        } else {
-            return null; // All lists are empty
-        }
+        else return null; // All lists are empty
+
     }
 
 //    private Queue<KernelLand.PCB> choosePriority()
@@ -200,7 +200,7 @@ public class Scheduler {
         if(runningPCB.isSleeping())
             throw new RuntimeException("Sleeping process called function");
 ////        if(runningPCB.getPid() != KernelLand.OS.callerPid){ //TODO this is a band-aid and doesn't even work every time
-////            KernelLand.OSPrinter.print("No running process called function");
+////            Utility.OSPrinter.print("No running process called function");
 //            return;
 //        }
 

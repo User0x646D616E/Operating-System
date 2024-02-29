@@ -1,5 +1,7 @@
 package Devices;
 
+import org.junit.Ignore;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -8,12 +10,13 @@ import java.util.Arrays;
 public class FakeFileSystem implements Device {
     static final int MAX_FILES = 10;
 
-    private int i = 0;
-    private final RandomAccessFile[] randomAccessFiles = new RandomAccessFile[10];
+    static private int i = 0;
+    static private final RandomAccessFile[] randomAccessFiles = new RandomAccessFile[MAX_FILES];
 
 
     /**
      * Opens file with file path {@code s}
+     *
      * @param s the file path
      * @return id of a file. Returns -1 if no file can be created
      */
@@ -41,7 +44,7 @@ public class FakeFileSystem implements Device {
     }
 
     /**
-     * Close file with ID id
+     * Close file with ID id.
      * @param id of the file to be closed
      */
     @Override
@@ -83,6 +86,7 @@ public class FakeFileSystem implements Device {
 
     /**
      * Write data to a file with ID id.
+     *
      * @param id the id if the file to be written to.
      * @param data the byte[] to be written
      * @return TODO not sure yet
@@ -94,6 +98,27 @@ public class FakeFileSystem implements Device {
 
         try {
             randomAccessFiles[id].write(data);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return 0;
+    }
+
+    /**
+     * Write data to a file with ID id.
+     *
+     * @param id The id if the file to be written to.
+     * @param data The byte[] to be written
+     * @param stuff Other bytes that will be appended to data
+     * @return TODO not sure yet
+     */
+    public int write(int id, byte[] data, byte...stuff) {
+        if(randomAccessFiles[id] == null)
+            throw new RuntimeException("404: file not found");
+
+        try {
+            randomAccessFiles[id].write(data);
+            randomAccessFiles[id].write(stuff);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

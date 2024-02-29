@@ -48,20 +48,20 @@ public abstract class UserlandProcess implements Runnable {
     * Halts process if quantum expired or has no available permits
     */
      boolean cooperate() {
-        if(quantumExpired) {
-            timeoutCounter++;
-           OS.switchProcess();
-           quantumExpired = false;
+         if(!quantumExpired)
+             return false;
 
-            /* Stop process */
-            try {
-                semaphore.acquire();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            return true;
-        }
-        return false;
+         timeoutCounter++;
+         OS.switchProcess();
+         quantumExpired = false;
+
+         /* Stop process */
+         try {
+             semaphore.acquire();
+         } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+         }
+         return true;
     }
 
     /** Wait until quantum expired to continue */

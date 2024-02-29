@@ -5,9 +5,10 @@ import KernelLand.OS;
 public class World extends UserlandProcess {
     String str;
 
-    World(String str){
+    public World(String str){
         this.str = str;
     }
+
     void main(){
         while(true){
             try {

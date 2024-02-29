@@ -4,31 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="Ready to implement devices">
-      <change afterPath="$PROJECT_DIR$/src/Devices/Device.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Devices/FakeFileSystem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Devices/IdException.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Devices/RandomDevice.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Devices/UnitTests/UnitTest_FakeFileSystem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Devices/UnitTests/UnitTest_RandomDevice.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Devices/VFS.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/UserLand/FileTyper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="commit to git">
+      <change afterPath="$PROJECT_DIR$/src/UserLand/Plead.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/UserLand/Server.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Utility/RealTimeFileReader.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OS.iml" beforeDir="false" afterPath="$PROJECT_DIR$/OS.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Calculate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/Calculate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Device.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/GoodbyeWorld.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/GoodbyeWorld.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HelloWorld.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/HelloWorld.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IdleProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/IdleProcess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Kernel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Kernel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Devices/FakeFileSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Devices/FakeFileSystem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Devices/RandomDevice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Devices/RandomDevice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Devices/VFS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Devices/VFS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/KernelLand/Kernel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Kernel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/KernelLand/OS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/OS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/KernelLand/OSPrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility/OSPrinter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/KernelLand/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Scheduler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/OS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/OSPrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/OSPrinter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PCB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/PCB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Scheduler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserlandProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/UserlandProcess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/World.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UserLand/FileTyper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/FileTyper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UserLand/UserlandProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/UserlandProcess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UserLand/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/World.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,6 +63,8 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.RealTimeFileReader.executor&quot;: &quot;Run&quot;,
+    &quot;Attach to process.pid 28772.executor&quot;: &quot;ProcessAttachDebug&quot;,
     &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
     &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
     &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
@@ -102,6 +95,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="RealTimeFileReader" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="Utility.RealTimeFileReader" />
+      <module name="OS" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Utility.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="UnitTest_FakeFileSystem.testClose" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="OS" />
       <extension name="coverage">
@@ -113,22 +119,6 @@
       <option name="PACKAGE_NAME" value="Devices.UnitTests" />
       <option name="MAIN_CLASS_NAME" value="Devices.UnitTests.UnitTest_FakeFileSystem" />
       <option name="METHOD_NAME" value="testClose" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="UnitTest_FakeFileSystem.testOpen" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="OS" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Devices.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="Devices.UnitTests" />
-      <option name="MAIN_CLASS_NAME" value="Devices.UnitTests.UnitTest_FakeFileSystem" />
-      <option name="METHOD_NAME" value="testOpen" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -169,10 +159,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
+        <item itemvalue="Application.RealTimeFileReader" />
         <item itemvalue="JUnit.UnitTest_FakeFileSystem.testRead" />
         <item itemvalue="JUnit.UnitTest_FakeFileSystem.testWrite" />
         <item itemvalue="JUnit.UnitTest_FakeFileSystem.testClose" />
-        <item itemvalue="JUnit.UnitTest_FakeFileSystem.testOpen" />
       </list>
     </recent_temporary>
   </component>
@@ -274,7 +264,15 @@
       <option name="project" value="LOCAL" />
       <updated>1708746525370</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="commit to git">
+      <option name="closed" value="true" />
+      <created>1709182465396</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1709182465396</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -314,7 +312,8 @@
     <MESSAGE value="Just prepared for testing" />
     <MESSAGE value="Probabalistic sleep and demote are fully functional as far as i Know" />
     <MESSAGE value="Ready to implement devices" />
-    <option name="LAST_COMMIT_MESSAGE" value="Ready to implement devices" />
+    <MESSAGE value="commit to git" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit to git" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -337,5 +336,10 @@
         <PinnedItemInfo parentTag="PCB" memberName="timeToWake" />
       </pinned-members>
     </pin-to-top-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/OS$RealTimeFileReader.ic" NAME="RealTimeFileReader Coverage Results" MODIFIED="1709147240114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>Utility.*</FILTER>
+    </SUITE>
   </component>
 </project>
