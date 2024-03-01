@@ -49,7 +49,9 @@ public class Scheduler {
     }
 
     /** Demote a thread after its {@code getTimeoutCounter} is greater than MAX_TIMEOUT */
-    private void demote(final int MAX_TIMEOUT){
+    private void demote(final int MAX_TIMEOUT) {
+        if(runningPCB == null) return;
+
         if(runningPCB.getUp().getTimeoutCounter() >= MAX_TIMEOUT) {
             if(runningPCB.getPriority() == OS.Priority.REALTIME)
                 runningPCB.setPriority(OS.Priority.INTERACTIVE);
@@ -121,7 +123,12 @@ public class Scheduler {
         if(priority == null) return; // no need to switch
 
         PCB newPCB = priority.remove();
-        if(!runningPCB.isDone() && !runningPCB.isSleeping())
+        if(runningPCB.isDone()) {
+            /* Close Devices */
+            for(int id : runningPCB.getDeviceIDs())
+                Kernel.vfs.close(id);
+        }
+        else if(!runningPCB.isSleeping())
             priority.add(newPCB);
 
         runningPCB = priority.peek();
@@ -150,7 +157,6 @@ public class Scheduler {
         else if (!interactive.isEmpty())
             return interactive;
         else return null; // All lists are empty
-
     }
 
 //    private Queue<KernelLand.PCB> choosePriority()
@@ -215,5 +221,7 @@ public class Scheduler {
         OSPrinter.println("Sleeping process list: " + sleeping);
         OSPrinter.println("");
     }
+
+    public PCB getRunningPCB() { return runningPCB; }
 }
 

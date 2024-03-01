@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 public class OS {
     /** Our KernelLand.Kernel <3 */
-    private static Kernel kernel;
+    private static final Kernel kernel = new Kernel();
     private static final Object lock = new Object();
 
     /** Types of system calls */
@@ -53,7 +53,6 @@ public class OS {
      */
     public static void startup(UserlandProcess init) {
         OSPrinter.println("KernelLand.OS: starting up :)");
-        kernel = new Kernel();
         params = new ArrayList<>();
 
         waitForKernel();
@@ -190,6 +189,5 @@ public class OS {
         return lock;
     }
 
-
-
+    public static Kernel getKernel() { return kernel; }
 }

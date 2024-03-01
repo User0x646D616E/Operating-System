@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class VFS implements Device {
     int new_vfsID = 0;
-    /** TODO Maps our vfs ids to a device and id pair. The device id pair represents a device with its own id. */
+    /** Maps our vfs ids to a device and id pair. The id int the device id pair holds the devices returned id. */
     static Map<Integer, Map.Entry<Integer, Device>> vfsDevices = new HashMap<>();
 
     static private final Map<String, Device> deviceMap = new HashMap<>();
@@ -13,7 +13,6 @@ public class VFS implements Device {
         deviceMap.put("random", new RandomDevice());
         deviceMap.put("file", new FakeFileSystem());
     }
-
 
     @Override
     public int open(String s) {
@@ -23,8 +22,11 @@ public class VFS implements Device {
         Device device = deviceMap.get(words[0]);
         String param = words[1];
 
-        vfsDevices.put(new_vfsID, Map.entry(device.open(param), device));
+        int deviceID;
+        vfsDevices.put(new_vfsID, Map.entry(deviceID=device.open(param), device));
 
+        if(deviceID == -1)
+            return -1;
         return new_vfsID++;
     }
 

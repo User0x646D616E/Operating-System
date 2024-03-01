@@ -5,13 +5,15 @@ import UserLand.UserlandProcess;
 public class PCB {
     static int nextpid = 0;
     private final int pid;
-    /** note: can wake up if time >= time to wake*/
-    long timeToWake; // Time until the process can be awoken
+    /** Time until the process can be awoken note: can wake up if time >= time to wake */
+    long timeToWake;
     private boolean isSleeping = false;
 
     private final UserlandProcess up;
 
     private OS.Priority priority;
+
+    private final int[] deviceIDs = new int[10];
 
     /** creates thread, sets pid */
     PCB(UserlandProcess up){
@@ -68,6 +70,8 @@ public class PCB {
         this.priority = priority;
         up.setPriority(priority); //TODO for testing
     }
+
+    public int[] getDeviceIDs() { return deviceIDs; }
 
     @Override
     public String toString() {

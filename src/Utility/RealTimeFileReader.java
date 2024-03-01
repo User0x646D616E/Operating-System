@@ -29,7 +29,7 @@ public class RealTimeFileReader {
     private static Thread initThread(JTextArea textArea) {
         String filename = "OSDebug.txt";
 
-        Thread readerThread = new Thread(() -> {
+        return new Thread(() -> {
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(filename));
                 String line;
@@ -38,14 +38,12 @@ public class RealTimeFileReader {
                         // Update the JTextArea with the new line
                         String finalLine = line;
                         SwingUtilities.invokeLater(() -> textArea.append(finalLine + "\n"));
-                    } else {
-                        Thread.sleep(100);
                     }
+                    else Thread.sleep(100);
                 }
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         });
-        return readerThread;
     }
 }

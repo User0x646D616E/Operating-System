@@ -4,22 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="commit to git">
-      <change afterPath="$PROJECT_DIR$/src/UserLand/Plead.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/UserLand/Server.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Utility/RealTimeFileReader.java" afterDir="false" />
+    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="VFS mostly implemented">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Devices/FakeFileSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Devices/FakeFileSystem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Devices/RandomDevice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Devices/RandomDevice.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Devices/VFS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Devices/VFS.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/KernelLand/Kernel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Kernel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/KernelLand/OS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/OS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/KernelLand/OSPrinter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility/OSPrinter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/KernelLand/PCB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/PCB.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/KernelLand/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Scheduler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserLand/FileTyper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/FileTyper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserLand/UserlandProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/UserlandProcess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserLand/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/World.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Utility/RealTimeFileReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility/RealTimeFileReader.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +52,6 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
     <option name="sortByType" value="true" />
-    <option name="sortKey" value="BY_TYPE" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
@@ -272,7 +265,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709182465396</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="VFS mostly implemented">
+      <option name="closed" value="true" />
+      <created>1709182836338</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1709182836338</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -281,6 +282,11 @@
         <entry key="MAIN">
           <value>
             <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="false" />
+                </map>
+              </option>
               <option name="FILTERS">
                 <map>
                   <entry key="branch">
@@ -313,7 +319,8 @@
     <MESSAGE value="Probabalistic sleep and demote are fully functional as far as i Know" />
     <MESSAGE value="Ready to implement devices" />
     <MESSAGE value="commit to git" />
-    <option name="LAST_COMMIT_MESSAGE" value="commit to git" />
+    <MESSAGE value="VFS mostly implemented" />
+    <option name="LAST_COMMIT_MESSAGE" value="VFS mostly implemented" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

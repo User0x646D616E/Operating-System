@@ -32,7 +32,7 @@ public class RandomDevice implements Device {
         }
         randoms[i] = randomDevice;
 
-        return i; // we know i is no longer empty
+        return i;
     }
 
     /**

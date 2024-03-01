@@ -1,7 +1,5 @@
 package Devices;
 
-import org.junit.Ignore;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -25,7 +23,6 @@ public class FakeFileSystem implements Device {
         if(s == null || s.isEmpty())
             throw new RuntimeException("File path is empty or null");
 
-
         /* Find and fill empty pos */
         int count = 0; // times the loop has run
         while(randomAccessFiles[i] != null) {
@@ -37,7 +34,7 @@ public class FakeFileSystem implements Device {
         try {
             randomAccessFiles[i] = new RandomAccessFile(s, "rw");
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            return -1;
         }
 
         return i;
