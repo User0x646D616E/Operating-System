@@ -1,109 +1,96 @@
 package UserLand;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 import static KernelLand.OS.*;
 
 
 public class FileTyper extends UserlandProcess {
+    Scanner scanner = new Scanner(System.in);
+    final Map<Integer, String> fileIDs = new HashMap<>();
 
+    int id;
+    Object input;
 
     @Override
     void main() {
-        Scanner scanner = new Scanner(System.in);
-        String inputString;
+        promptUser();
 
-        int id;
-        Object input;
-        final Map<Integer, String> fileIDs = new HashMap<>();
+        while(true) {
+            input = getString("Type into file: ");
+            write(id, ((String)input).getBytes());
 
-        while(true)
-        {
+            sleep(1000, 0);
+            cooperate();
+        }
+    }
+
+    private boolean promptUser() {
+        while(true) {
             System.out.printf("""
-                What would you like to do:
-                1) Open a file
-                2) Close a file
-                3) type into the file
-                4) Read a file
-                %s
-                Type {number}:\s"""
-                    , fileIDs);
+            
+            What would you like to do:
+            File IDs: %s
+            1) Open a file
+            2) Close a file
+            3) type into the file
+            4) Read a file
+            """
+            , fileIDs);
 
-            switch(scanner.nextInt()) {
+            switch(getInt("Type {number}: ")) {
                 case 1 -> {
-                    System.out.print("Type file name: "); scanner.nextLine(); inputString = scanner.nextLine();
-                    fileIDs.put(open("file " + inputString), inputString);
+                    input = getString("Type file name: ");
+                    fileIDs.put(open("file " + input), (String)input);
                 }
                 case 2 -> {
-                    System.out.print("Type file id: "); input = scanner.nextInt();
-                    close((int)input);
-                    fileIDs.remove((int)input);
+                    System.out.print("Type file id: "); id = scanner.nextInt();
+                    close(id);
+                    fileIDs.remove(id);
                     System.out.println("File closed");
                 }
                 case 3 -> {
-                    System.out.print("Type file id: "); id = scanner.nextInt();
-                    System.out.print("Type: "); scanner.nextLine(); input = scanner.nextLine();
-                    write(id, ((String)input).getBytes());
+                    id = getInt("Type file id: ");
+                    createProcess(new Plead());
+                    return true;
                 }
                 case 4 -> {
                     System.out.print("Type file id: "); id = scanner.nextInt();
                     System.out.print(Arrays.toString(read(id, 50)));
                 }
             }
-
             cooperate();
         }
-//        System.out.print("Would you like to open a file?(Y/N): ");
-//        inputString = scanner.nextLine();
-//
-//        if(inputString.toUpperCase().charAt(0) == 'Y') {
-//            System.out.print("Type the path of the file: ");
-//            inputString = scanner.nextLine();
-//
-//            id = open("file " + inputString);
-//            new World("please");
-//            sleep(1000, id);
-//        }
-//        else {
-//            createProcess(new GoodbyeWorld());
-//            return;
-//        }
-//
-//        for(int i = 0; i < 2; i++) {
-//            System.out.print("type into the file: ");
-//            inputString = scanner.nextLine();
-//
-//            write(id, inputString.getBytes());
-//
-//            createProcess(new Plead());
-//            sleep(1000, id);
-//        }
-
-
     }
 
-    int openFile(String path) {
-
-        return 0;
+    private int getInt(String prompt) {
+        while(true) {
+            System.out.print(prompt);
+            try {
+                input = scanner.nextInt();
+                break;
+            } catch(InputMismatchException e) {
+                scanner.nextLine(); // eat invalid input
+                System.out.println("Invalid input please enter an Int");
+            }
+        }
+        scanner.nextLine(); // eat new line
+        return (int)input;
     }
 
-    void closeFile() {
+    private String getString(String prompt) {
+        String returnStr;
 
-    }
-
-    void readFile() {
-
-    }
-
-    void writeFile(int id) {
-        String inputString = "";
-        byte[] buffer;
-
-        buffer = inputString.getBytes();
-        write(id, buffer);
-        write(id, new byte[]{'\n'});
+        while(true) {
+            System.out.print(prompt);
+            try {
+                returnStr = scanner.nextLine();
+                break;
+            } catch(InputMismatchException e) {
+                scanner.nextLine(); // eat invalid input
+                System.out.println("Invalid input please enter a string");
+            }
+        }
+        return returnStr;
     }
 }

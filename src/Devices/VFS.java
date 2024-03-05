@@ -17,13 +17,13 @@ public class VFS implements Device {
     @Override
     public int open(String s) {
         String[] words = s.split(" ");
+        int deviceID;
 
         /* Find and call open on Device */
         Device device = deviceMap.get(words[0]);
         String param = words[1];
 
-        int deviceID;
-        vfsDevices.put(new_vfsID, Map.entry(deviceID=device.open(param), device));
+        vfsDevices.put(new_vfsID, Map.entry(deviceID = device.open(param), device));
 
         if(deviceID == -1)
             return -1;

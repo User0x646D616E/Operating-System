@@ -5,19 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="VFS debugging">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OS.iml" beforeDir="false" afterPath="$PROJECT_DIR$/OS.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Devices/FakeFileSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Devices/FakeFileSystem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Devices/VFS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Devices/VFS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/KernelLand/Kernel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Kernel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/KernelLand/OS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/OS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/KernelLand/PCB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/PCB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/KernelLand/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Scheduler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UserLand/FileTyper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/FileTyper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserLand/GoodbyeWorld.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/GoodbyeWorld.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserLand/UserlandProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/UserlandProcess.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +24,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="testinFolderOrganization" />
+        <entry key="$PROJECT_DIR$" value="78083846fc4630043147e234a8c8f96cf99cb771" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -157,10 +147,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.Main" />
-        <item itemvalue="Application.RealTimeFileReader" />
-        <item itemvalue="JUnit.UnitTest_FakeFileSystem.testRead" />
         <item itemvalue="JUnit.UnitTest_FakeFileSystem.testWrite" />
+        <item itemvalue="JUnit.UnitTest_FakeFileSystem.testRead" />
         <item itemvalue="JUnit.UnitTest_FakeFileSystem.testClose" />
+        <item itemvalue="Application.RealTimeFileReader" />
       </list>
     </recent_temporary>
   </component>
