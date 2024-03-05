@@ -36,6 +36,8 @@ public class VFS implements Device {
      */
     @Override
     public void close(int id) {
+        if(vfsDevices.get(id) == null) return;
+
         Device device = vfsDevices.get(id).getValue();
         int deviceID = vfsDevices.get(id).getKey();
 

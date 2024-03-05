@@ -13,10 +13,10 @@ public class PCB {
 
     private OS.Priority priority;
 
-    private final int[] deviceIDs = new int[10];
+    private final int[] deviceIDs = new int[] {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 
     /** creates thread, sets pid */
-    PCB(UserlandProcess up){
+    PCB(UserlandProcess up) {
         pid = nextpid++;
         this.up = up;
     }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class OS {
-    /** Our KernelLand.Kernel <3 */
+    /** Our Kernel <3 */
     private static final Kernel kernel = new Kernel();
     private static final Object lock = new Object();
 
@@ -52,16 +52,15 @@ public class OS {
      * @param init process to be run at startup
      */
     public static void startup(UserlandProcess init) {
-        OSPrinter.println("KernelLand.OS: starting up :)");
+        OSPrinter.println("OS: starting up :)");
         params = new ArrayList<>();
 
-        waitForKernel();
-        OSPrinter.println("\nKernelLand.OS: KernelLand.Kernel waiting to run\n");
+        OSPrinter.println("\nOS: KernelLand.Kernel waiting to run\n");
 
         createProcess(init);
         createProcess(new IdleProcess());
 
-        OSPrinter.println("\nKernelLand.OS: startup complete\n");
+        OSPrinter.println("\nOS: startup complete\n");
     }
 
     /**
@@ -132,10 +131,12 @@ public class OS {
         callKernel(CallType.CLOSE, id);
     }
 
-    public static void read(int id, int size) {
+    public static byte[] read(int id, int size) {
         OSPrinter.printf("\nOS: read{%s} -> ", Kernel.scheduler.runningPCB);
 
         callKernel(CallType.READ, id, size);
+
+        return (byte[]) returnValue;
     }
 
     public static void seek(int id, int to) {

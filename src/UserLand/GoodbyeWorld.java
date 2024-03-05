@@ -7,11 +7,10 @@ public class GoodbyeWorld extends UserlandProcess {
         while(true){
             try {
                 System.out.println("Goodbye World");
-                Thread.sleep(1);
+                Thread.sleep(250);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            OS.sleep(3000, this.pid); // we need to interrupt the thread
             cooperate();
         }
     }

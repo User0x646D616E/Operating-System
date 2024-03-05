@@ -38,6 +38,8 @@ public class Scheduler {
             {
                 demote(5);
 
+                if(runningPCB.isDone())
+                    OS.switchProcess();
                 if(runningPCB != null)
                     runningPCB.requestStop(); // will switch processes
             }

@@ -1,17 +1,10 @@
-import KernelLand.OS;
-import UserLand.*;
-import Utility.RealTimeFileReader;
+import UserLand.FileTyper;
+import UserLand.HelloWorld;
 
-import static KernelLand.OS.Priority.*;
+import static KernelLand.OS.*;
 
 public class Main {
-
-    public static void main(String[] args)
-    {
-        /* CHECK OSDebug.txt FOR MORE INFORMATION */
-//        RealTimeFileReader.start();
-
-        OS.startup(new FileTyper());
-        OS.createProcess(new Plead());
+    public static void main(String[] args) {
+        startup(new FileTyper());
     }
 }

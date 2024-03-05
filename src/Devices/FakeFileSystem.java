@@ -96,7 +96,7 @@ public class FakeFileSystem implements Device {
         try {
             randomAccessFiles[id].write(data);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return -1;
         }
         return 0;
     }

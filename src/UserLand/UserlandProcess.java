@@ -5,7 +5,7 @@ import KernelLand.OS;
 import java.util.concurrent.Semaphore;
 
 public abstract class UserlandProcess implements Runnable {
-    private final Thread thread;
+    final Thread thread;
     private final Semaphore semaphore;
     public int pid;
 

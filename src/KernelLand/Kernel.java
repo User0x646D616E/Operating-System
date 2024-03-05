@@ -60,9 +60,9 @@ public class Kernel implements Runnable, Device {
                 case SLEEP -> scheduler.sleep((Integer) OS.params.get(0));
 
                 /* Vfs */
-                case OPEN -> OS.returnValue = vfs.open((String) OS.params.get(0));
+                case OPEN  -> OS.returnValue = vfs.open((String) OS.params.get(0));
                 case CLOSE -> vfs.close((int) OS.params.get(0));
-                case READ  -> vfs.read((int)OS.params.get(0), (int)OS.params.get(1));
+                case READ  -> OS.returnValue = vfs.read((int)OS.params.get(0), (int)OS.params.get(1));
                 case SEEK  -> vfs.seek((int)OS.params.get(0), (int)OS.params.get(1));
                 case WRITE -> vfs.write((int)OS.params.get(0), (byte[]) OS.params.get(1));
                 case SHUTDOWN -> { return; }
@@ -74,7 +74,7 @@ public class Kernel implements Runnable, Device {
     @Override
     public int open(String s) {
         int[] processIDs = scheduler.getRunningPCB().getDeviceIDs();
-        int id, count;
+        int vfsID, count;
 
         /* Find empty position */
         count = 0;
@@ -82,10 +82,10 @@ public class Kernel implements Runnable, Device {
             if(++count >= processIDs.length)
                 return -1; // no empty spot
         }
-        id = vfs.open(Integer.toString(count));
+        vfsID = vfs.open(Integer.toString(count));
 
-        if(id == -1) return -1;
-        return processIDs[count] = id;
+        if(vfsID == -1) return -1;
+        return processIDs[count] = vfsID;
     }
 
     @Override
