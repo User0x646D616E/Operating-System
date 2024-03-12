@@ -1,6 +1,6 @@
 package UserLand;
 
-import KernelLand.OS;
+import static KernelLand.OS.sleep;
 
 public class GoodbyeWorld extends UserlandProcess {
     void main() {
@@ -11,7 +11,7 @@ public class GoodbyeWorld extends UserlandProcess {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            cooperate();
+            sleep(1000);
         }
     }
 }

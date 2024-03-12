@@ -34,7 +34,7 @@ public class Calculate extends UserlandProcess{
             }
 
 //            KernelLand.OS.sleep(1000000);
-            cooperateOnInterrupt();
+            cooperate();
         }
     }
 
@@ -54,7 +54,7 @@ public class Calculate extends UserlandProcess{
 
 //            KernelLand.OS.sleep(1000);
 //            cooperate();
-            cooperateOnInterrupt();
+            cooperate();
         }
     }
 

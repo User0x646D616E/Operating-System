@@ -7,7 +7,14 @@ public class Plead extends UserlandProcess {
     void main(){
         while(true){
             System.out.println(choosePlead());
-            cooperateOnInterrupt();
+
+            try {
+                Thread.sleep(250);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            cooperate();
         }
     }
 

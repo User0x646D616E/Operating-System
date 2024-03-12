@@ -6,6 +6,7 @@ import java.util.concurrent.Semaphore;
 
 public abstract class UserlandProcess implements Runnable {
     final Thread thread;
+    UserlandProcess parentThread;
     private final Semaphore semaphore;
     public int pid;
 
@@ -36,6 +37,7 @@ public abstract class UserlandProcess implements Runnable {
     @Override
     public void run()
     {
+        parentThread = this;
         try {
             semaphore.acquire(); // wait until KernelLand.OS is ready and start is called
         } catch (InterruptedException e) {
@@ -52,16 +54,15 @@ public abstract class UserlandProcess implements Runnable {
              return false;
 
          timeoutCounter++;
-         OS.switchProcess();
+         parentThread.switchProcess();
          quantumExpired = false;
+         stop();
 
-         /* Stop process */
-         try {
-             semaphore.acquire();
-         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-         }
          return true;
+    }
+
+    private void switchProcess() {
+        OS.switchProcess();
     }
 
     /** Wait until quantum expired to continue */
@@ -99,7 +100,7 @@ public abstract class UserlandProcess implements Runnable {
     * indicates if the semaphore is 0
     * @return true if semaphore is 0, false otherwise
     */
-   boolean isStopped()
+   public boolean isStopped()
    {
        return semaphore.availablePermits() == 0;
    }
@@ -123,4 +124,9 @@ public abstract class UserlandProcess implements Runnable {
     public void setTimeoutCounter(int timeoutCounter) {
         this.timeoutCounter = timeoutCounter;
     }
+
+    public Thread getThread() {
+       return thread;
+    }
 }
+

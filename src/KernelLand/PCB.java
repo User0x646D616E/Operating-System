@@ -33,7 +33,7 @@ public class PCB {
         return isSleeping;
     }
 
-    /** Stop process status to sleeping and stop process */
+    /** Set status to sleeping */
     public void isSleeping(boolean isSleeping){
         this.isSleeping = isSleeping;
     }
@@ -80,5 +80,9 @@ public class PCB {
                     up.toString(), pid, timeToWake);
         return String.format( "%s pid:%s",
                 up.toString(), pid);
+    }
+
+    public boolean isStopped() {
+        return  up.isStopped();
     }
 }

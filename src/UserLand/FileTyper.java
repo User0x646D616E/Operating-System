@@ -21,12 +21,28 @@ public class FileTyper extends UserlandProcess {
             write(id, ((String)input).getBytes());
 
             sleep(1000, 0);
-            cooperate();
+        }
+
+//        simplePrompt();
+    }
+
+    private void simplePrompt() {
+        /* open file */
+        input = getString("Type file name: ");
+        fileIDs.put(open("file " + input), (String)input);
+
+        /* type into file */
+        while(true) {
+            input = getString("Type into file: ");
+            write(id, ((String)input).getBytes());
+
+            sleep(1000);
         }
     }
 
-    private boolean promptUser() {
-        while(true) {
+    private void promptUser() {
+        while(true)
+        {
             System.out.printf("""
             
             What would you like to do:
@@ -52,7 +68,7 @@ public class FileTyper extends UserlandProcess {
                 case 3 -> {
                     id = getInt("Type file id: ");
                     createProcess(new Plead());
-                    return true;
+                    return;
                 }
                 case 4 -> {
                     System.out.print("Type file id: "); id = scanner.nextInt();

@@ -5,7 +5,7 @@ public class IdleProcess extends UserlandProcess{
     void main() {
         while(true){
             try {
-                Thread.sleep(25);
+                Thread.sleep(1);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

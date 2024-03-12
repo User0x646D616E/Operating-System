@@ -1,4 +1,5 @@
 import UserLand.FileTyper;
+import UserLand.GoodbyeWorld;
 import UserLand.HelloWorld;
 
 import static KernelLand.OS.*;

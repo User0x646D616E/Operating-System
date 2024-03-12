@@ -96,16 +96,36 @@ public class OS {
      * Tells our {@code kernel} to switch process'
      */
     public static void switchProcess() {
-        OSPrinter.print("\nKernelLand.OS: Switch process -> ");
+        PCB switchedPCB = Kernel.scheduler.runningPCB; // Process to be switched from
+
+        OSPrinter.print("\nOS: Switch process -> ");
         currentCall = CallType.SWITCHPROCESS;
         kernel.start();
         waitForKernel();
+
+        // no need for runningPCB.stop because process stops on cooperate
     }
 
-    public static void sleep(int milliseconds, int identity) {
+    public static void sleep(int milliseconds) {
         PCB runningPCB = Kernel.scheduler.runningPCB;
 
         OSPrinter.printf("\nOS: Sleep{%s} -> ", runningPCB);
+
+        currentCall = CallType.SLEEP;
+        params.clear();
+        params.add(milliseconds);
+        kernel.start();
+
+        waitForKernel();
+
+        runningPCB.stop();
+    }
+
+    /** Sleeps currently running process and switches to the next process */
+    public static void sleep(int milliseconds, int identity) {
+        PCB sleepingPCB = Kernel.scheduler.runningPCB; // Process to be slept
+
+        OSPrinter.printf("\nOS: Sleep{%s} -> ", sleepingPCB);
 
         currentCall = CallType.SLEEP;
         callerPid = identity;
@@ -115,7 +135,7 @@ public class OS {
 
         waitForKernel();
 
-        runningPCB.stop();
+        sleepingPCB.stop();
     }
 
     public static int open(String s) {
