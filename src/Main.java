@@ -1,11 +1,13 @@
-import UserLand.FileTyper;
-import UserLand.GoodbyeWorld;
-import UserLand.HelloWorld;
+import KernelLand.OS;
+import UserLand.*;
 
 import static KernelLand.OS.*;
 
 public class Main {
     public static void main(String[] args) {
-        startup(new FileTyper());
+        startup(new HelloWorld());
+        OS.createProcess(new Pong());
+        OS.createProcess(new Ping());
+        OS.createProcess(new GoodbyeWorld());
     }
 }

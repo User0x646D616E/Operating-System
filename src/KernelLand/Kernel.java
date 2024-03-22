@@ -5,6 +5,11 @@ import Devices.VFS;
 import UserLand.UserlandProcess;
 import Utility.OSPrinter;
 
+/* Shared memory */
+import static KernelLand.OS.currentCall;
+import static KernelLand.OS.returnValue;
+import static KernelLand.OS.params;
+
 import java.util.concurrent.Semaphore;
 
 public class Kernel implements Runnable, Device {
@@ -54,17 +59,20 @@ public class Kernel implements Runnable, Device {
             /* Get call and run it*/
             switch (OS.currentCall) {
                 /* Scheduler */
-                case CREATEPROCESS -> OS.returnValue = scheduler.createProcess
-                        ((UserlandProcess) OS.params.get(0), (OS.Priority) OS.params.get(1));
+                case CREATEPROCESS -> returnValue = scheduler.createProcess
+                        ((UserlandProcess) params.get(0), (OS.Priority) params.get(1));
                 case SWITCHPROCESS -> scheduler.switchProcess();
-                case SLEEP -> scheduler.sleep((Integer) OS.params.get(0));
+                case SLEEP -> scheduler.sleep((Integer) params.get(0));
+                case SENDMESSAGE    -> scheduler.sendMessage((Message)params.get(0));
+                case WAITFORMESSAGE -> returnValue = scheduler.waitForMessage();
 
                 /* Vfs */
-                case OPEN  -> OS.returnValue = vfs.open((String) OS.params.get(0));
-                case CLOSE -> vfs.close((int) OS.params.get(0));
-                case READ  -> OS.returnValue = vfs.read((int)OS.params.get(0), (int)OS.params.get(1));
-                case SEEK  -> vfs.seek((int)OS.params.get(0), (int)OS.params.get(1));
-                case WRITE -> vfs.write((int)OS.params.get(0), (byte[]) OS.params.get(1));
+                case OPEN  -> returnValue = vfs.open((String) params.get(0));
+                case CLOSE -> vfs.close((int) params.get(0));
+                case READ  -> returnValue = vfs.read((int)params.get(0), (int)params.get(1));
+                case SEEK  -> vfs.seek((int)params.get(0), (int)params.get(1));
+                case WRITE -> vfs.write((int)params.get(0), (byte[]) params.get(1));
+
                 case SHUTDOWN -> { return; }
             }
             scheduler.runningPCB.run();

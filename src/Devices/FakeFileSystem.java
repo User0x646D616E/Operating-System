@@ -86,7 +86,7 @@ public class FakeFileSystem implements Device {
      *
      * @param id the id if the file to be written to.
      * @param data the byte[] to be written
-     * @return TODO not sure yet
+     * @return 0 if write succeeds, -1 if write fails
      */
     @Override
     public int write(int id, byte[] data) {
@@ -107,7 +107,7 @@ public class FakeFileSystem implements Device {
      * @param id The id if the file to be written to.
      * @param data The byte[] to be written
      * @param stuff Other bytes that will be appended to data
-     * @return TODO not sure yet
+     * @return 0 if write succeeds
      */
     public int write(int id, byte[] data, byte...stuff) {
         if(randomAccessFiles[id] == null)

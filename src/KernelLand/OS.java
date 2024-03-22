@@ -22,13 +22,15 @@ public class OS {
         READ,
         SEEK,
         WRITE,
+        SENDMESSAGE,
+        WAITFORMESSAGE,
         SHUTDOWN,
     }
+    /** System call to be executed by the KernelLand.Kernel */
+    static CallType currentCall;
 
     /** The pid of the userland process that called an KernelLand.OS method */
     static int callerPid;
-    /** System call to be executed by the KernelLand.Kernel */
-    static CallType currentCall;
 
     /** Parameters of our system call {@code currentCall} */
     static ArrayList<Object> params;
@@ -79,7 +81,7 @@ public class OS {
      * @param up {@code UserLand.UserlandProcess} to be created
      *
      */
-    public static void createProcess(UserlandProcess up, Priority priority) // TODO implement create process with priority
+    public static void createProcess(UserlandProcess up, Priority priority)
     {
         OSPrinter.printf("\nKernelLand.OS: Create process{%s} -> ", up);
 
@@ -138,6 +140,40 @@ public class OS {
         sleepingPCB.stop();
     }
 
+    /**
+     * Send a message to the process with the pid specified by {@code senderPID} in {@code Message}
+     * Adds message to the message queue of the target process
+     *
+     * @param senderMessage message to be sent
+     */
+    public static void sendMessage(Message senderMessage) {
+        senderMessage.senderPID = Kernel.scheduler.runningPCB.getPid(); // so we can log the sender pid
+        OSPrinter.printf("\nOS: sendMessage{\n%s} -> ", senderMessage);
+
+        callKernel(CallType.SENDMESSAGE, senderMessage);
+    }
+
+    /**
+     * Wait until a message is received and return it
+     * waits until another process calls sendMessage and returns the message
+     * in its message queue
+     *
+     * @return message that is received
+     */
+    public static Message waitForMessage() {
+        PCB waitingProcess = Kernel.scheduler.runningPCB;
+        OSPrinter.printf("\nOS: waitForMessage{%s} -> ", Kernel.scheduler.runningPCB);
+
+        callKernel(CallType.WAITFORMESSAGE);
+        if(returnValue != null)
+            return (Message)returnValue;
+
+        waitingProcess.stop(); // waiting for message
+
+        return waitingProcess.getMessageQueue().poll();
+    }
+
+
     public static int open(String s) {
         OSPrinter.printf("\nOS: open{%s} -> ", Kernel.scheduler.runningPCB);
 
@@ -172,6 +208,7 @@ public class OS {
         return (int)returnValue;
     }
 
+
     /**
      * Set {@code currentCall} and add parameters to shared memory {@code params}
      * then, call the kernel and wait for execution.
@@ -189,9 +226,21 @@ public class OS {
         waitForKernel();
     }
 
+    public static int getPid() {
+        return Kernel.scheduler.runningPCB.getPid();
+    }
+
+    public static int getPidByName(String name) {
+        for (PCB pcb : Kernel.scheduler.getProcessPIDs().values()) {
+            if(pcb.getName().equalsIgnoreCase(name))
+                return pcb.getPid();
+        }
+        return -1; // no pcb with that name exists
+    }
+
     /** Wait for the {@code kernel} thread to finish the execution */
     static void waitForKernel() {
-        synchronized (lock){
+        synchronized (lock) {
             try {
                 lock.wait();
             } catch (InterruptedException e) {

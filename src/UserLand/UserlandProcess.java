@@ -1,7 +1,6 @@
 package UserLand;
 
 import KernelLand.OS;
-
 import java.util.concurrent.Semaphore;
 
 public abstract class UserlandProcess implements Runnable {
@@ -13,14 +12,14 @@ public abstract class UserlandProcess implements Runnable {
     boolean quantumExpired;
     int timeoutCounter = 0;
 
-    OS.Priority priority; //TODO for testing
+    OS.Priority priority;
 
 
     /**
      * Constructor for Userland process, initializes process with one thread
      */
     public UserlandProcess(){
-        thread = new Thread(this, "" + getClass());
+        thread = new Thread(this, getClass().getSimpleName());
 
         semaphore = new Semaphore(1);
         semaphore.drainPermits();
@@ -113,7 +112,7 @@ public abstract class UserlandProcess implements Runnable {
        return !thread.isAlive();
    }
 
-   public void setPriority(OS.Priority priority){ //TODO for testing
+   public void setPriority(OS.Priority priority){
        this.priority = priority;
    }
 

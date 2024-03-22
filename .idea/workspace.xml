@@ -4,18 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="File Typer implemented">
+    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="Implemented Messages">
+      <change afterPath="$PROJECT_DIR$/src/KernelLand/Message.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/UserLand/Ping.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/UserLand/Pong.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Devices/FakeFileSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Devices/FakeFileSystem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/KernelLand/Kernel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Kernel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/KernelLand/OS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/OS.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/KernelLand/PCB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/PCB.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/KernelLand/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Scheduler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UserLand/Calculate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/Calculate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserLand/FileTyper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/FileTyper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserLand/GoodbyeWorld.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/GoodbyeWorld.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserLand/IdleProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/IdleProcess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserLand/Plead.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/Plead.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UserLand/UserlandProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/UserlandProcess.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UserLand/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/World.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,41 +56,40 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
     <option name="sortByType" value="true" />
-    <option name="sortKey" value="BY_TYPE" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "Application.RealTimeFileReader.executor": "Run",
-    "Attach to process.pid 17780.executor": "ProcessAttachDebug",
-    "Attach to process.pid 26760.executor": "ProcessAttachDebug",
-    "Attach to process.pid 28772.executor": "ProcessAttachDebug",
-    "Attach to process.pid 32352.executor": "ProcessAttachDebug",
-    "Attach to process.pid 33556.executor": "ProcessAttachDebug",
-    "Attach to process.pid 5396.executor": "ProcessAttachDebug",
-    "Downloaded.Files.Path.Enabled": "false",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "false",
-    "Repository.Attach.Sources": "false",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
-    "jdk.selected.JAVA_MODULE": "17",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/User/OneDrive - University at Albany - SUNY/IdeaProjects/TheLexer",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.keymap"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.RealTimeFileReader.executor&quot;: &quot;Run&quot;,
+    &quot;Attach to process.pid 17780.executor&quot;: &quot;ProcessAttachDebug&quot;,
+    &quot;Attach to process.pid 26760.executor&quot;: &quot;ProcessAttachDebug&quot;,
+    &quot;Attach to process.pid 28772.executor&quot;: &quot;ProcessAttachDebug&quot;,
+    &quot;Attach to process.pid 32352.executor&quot;: &quot;ProcessAttachDebug&quot;,
+    &quot;Attach to process.pid 33556.executor&quot;: &quot;ProcessAttachDebug&quot;,
+    &quot;Attach to process.pid 5396.executor&quot;: &quot;ProcessAttachDebug&quot;,
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;false&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/User/OneDrive - University at Albany - SUNY/IdeaProjects/TheLexer&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;
   },
-  "keyToStringList": {
-    "ChangesTree.GroupingKeys": [
-      "directory",
-      "module"
+  &quot;keyToStringList&quot;: {
+    &quot;ChangesTree.GroupingKeys&quot;: [
+      &quot;directory&quot;,
+      &quot;module&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Main" />
@@ -296,7 +297,15 @@
       <option name="project" value="LOCAL" />
       <updated>1709676648665</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Fixed program breaking bug.&#10;When the Idle process was the only processes running it would call switch process, switch to itself, AND THEN sleep. This means that no process can then call switch process to awake the idle process">
+      <option name="closed" value="true" />
+      <created>1710222216629</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1710222216629</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -345,7 +354,9 @@
     <MESSAGE value="VFS mostly implemented" />
     <MESSAGE value="VFS debugging" />
     <MESSAGE value="File Typer implemented" />
-    <option name="LAST_COMMIT_MESSAGE" value="File Typer implemented" />
+    <MESSAGE value="Fixed program breaking bug.&#10;When the Idle process was the only processes running it would call switch process, switch to itself, AND THEN sleep. This means that no process can then call switch process to awake the idle process" />
+    <MESSAGE value="Implemented Messages" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implemented Messages" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -373,5 +384,6 @@
     <SUITE FILE_PATH="coverage/OS$RealTimeFileReader.ic" NAME="RealTimeFileReader Coverage Results" MODIFIED="1709147240114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>Utility.*</FILTER>
     </SUITE>
+    <SUITE FILE_PATH="coverage/OS$Main.ic" NAME="Main Coverage Results" MODIFIED="1710740272750" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>

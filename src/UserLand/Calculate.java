@@ -1,14 +1,14 @@
 package UserLand;
 
 public class Calculate extends UserlandProcess{
-    enum Equation{
+    public enum Equation{
         NEXTPRIME,
         FIBBONACI,
         ADD,
     }
     Equation equation;
 
-    Calculate(Equation whatEquation){
+    public Calculate(Equation whatEquation){
        equation = whatEquation;
     }
      void main() {
