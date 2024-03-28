@@ -140,6 +140,7 @@ public class OS {
         sleepingPCB.stop();
     }
 
+    /* MESSAGING */
     /**
      * Send a message to the process with the pid specified by {@code senderPID} in {@code Message}
      * Adds message to the message queue of the target process
@@ -174,6 +175,7 @@ public class OS {
     }
 
 
+    /* DEVICES */
     public static int open(String s) {
         OSPrinter.printf("\nOS: open{%s} -> ", Kernel.scheduler.runningPCB);
 
@@ -208,7 +210,13 @@ public class OS {
         return (int)returnValue;
     }
 
+    /* MEMORY */
+    public static void getMapping(int virtualPageNumber) {
 
+    }
+
+
+    /* UTILITY */
     /**
      * Set {@code currentCall} and add parameters to shared memory {@code params}
      * then, call the kernel and wait for execution.

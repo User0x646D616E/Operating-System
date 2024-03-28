@@ -4,19 +4,33 @@ import KernelLand.OS;
 import java.util.concurrent.Semaphore;
 
 public abstract class UserlandProcess implements Runnable {
+
+    /* THREAD EXECUTION */
     final Thread thread;
     UserlandProcess parentThread;
     private final Semaphore semaphore;
     public int pid;
 
+
+    /* SCHEDULING */
     boolean quantumExpired;
     int timeoutCounter = 0;
-
     OS.Priority priority;
 
 
+    /* MEMORY */
+    final int PAGE_SIZE = 1024;
+    /** The memory available to our OS */
+    static byte[] memory = new byte[1024*1024];
+
+    /** Translation look aside buffer caches frequently used virtual to physical memory mappings.
+     * maps 2 virtual addresses to their respective physical address.
+     * Column 0 holds virtual addresses and column 1 holds the physical map */
+    static int[][] tlb = new int[2][2];
+
+
     /**
-     * Constructor for Userland process, initializes process with one thread
+     * Constructor for UserLand process, initializes process with one thread
      */
     public UserlandProcess(){
         thread = new Thread(this, getClass().getSimpleName());
@@ -29,6 +43,38 @@ public abstract class UserlandProcess implements Runnable {
 
         /* Wait for thread to become available */
         while(thread.getState() == Thread.State.NEW) {Thread.onSpinWait();}
+    }
+
+    /**
+     * Reads data from virtual memory
+     * Converts a virtual address to a physical address and reads from memory
+     *
+     * @param address the virtual address to be read from
+     * @return the physical address
+     */
+    public byte read(int address) {
+        // search tlb for virtual address
+        for(int i = 0; i < tlb[0].length; i++) { // column 0 being virtual mappings
+            if(address == tlb[0][i])
+                return memory[calcPhysicalAddress(address)]; // calculate and return physical address
+        }
+
+        OS.getMapping(address); // look in memory
+        return 0;
+    }
+
+    /** Writes data from virtual memory */
+    public void write(int address, byte value) {
+    }
+
+    /** takes a virtual address and calculates the physical address */
+    private int calcPhysicalAddress(int virtual) {
+        final int virtualPage, pageOffset, physical; // constant folding
+        virtualPage = virtual / PAGE_SIZE;
+        pageOffset  = virtual % PAGE_SIZE;
+        physical = virtualPage * PAGE_SIZE + pageOffset;
+
+        return physical;
     }
 
     abstract void main();
@@ -60,14 +106,14 @@ public abstract class UserlandProcess implements Runnable {
          return true;
     }
 
-    private void switchProcess() {
-        OS.switchProcess();
-    }
-
     /** Wait until quantum expired to continue */
     void cooperateOnInterrupt() {
         while(!cooperate())
             Thread.onSpinWait();
+    }
+
+    private void switchProcess() {
+        OS.switchProcess();
     }
 
     /**
@@ -92,7 +138,10 @@ public abstract class UserlandProcess implements Runnable {
     * Sets quantumExpired, indicating that this processes quantum has expired.
     * Waits for thread to hit cooperate to stop
     */
-   public void requestStop() { quantumExpired = true; }
+   public void requestStop() {
+       quantumExpired = true;
+   }
+
 
 
    /**
