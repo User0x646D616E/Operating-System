@@ -7,6 +7,8 @@ import Utility.OSPrinter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static KernelLand.Kernel.*;
+
 public class OS {
     /** Our Kernel <3 */
     private static final Kernel kernel = new Kernel();
@@ -141,6 +143,7 @@ public class OS {
     }
 
     /* MESSAGING */
+
     /**
      * Send a message to the process with the pid specified by {@code senderPID} in {@code Message}
      * Adds message to the message queue of the target process
@@ -176,6 +179,7 @@ public class OS {
 
 
     /* DEVICES */
+
     public static int open(String s) {
         OSPrinter.printf("\nOS: open{%s} -> ", Kernel.scheduler.runningPCB);
 
@@ -211,9 +215,81 @@ public class OS {
     }
 
     /* MEMORY */
-    public static void getMapping(int virtualPageNumber) {
 
+    /**
+     * Updates tlb with virtual-physical mapping.
+     * Also checks if memory access is out of bounds
+     *
+     * @param virtualPageNumber virtual page number we are mapping
+     * @return the index in the {@code tlb} that was updated
+     */
+     public static int getMapping(int virtualPageNumber) {
+         if(virtualPageNumber * PAGE_SIZE > scheduler.runningPCB.getAvailableMemory())
+             throw new RuntimeException("Attempted memory access out of bounds");
+
+        int physicalPageNumber = Kernel.scheduler.runningPCB.getVirtualPages()[virtualPageNumber];
+        int rand_row = virtualPageNumber % 2; // update a random row in tlb
+
+        // update tlb
+        UserlandProcess.getTlb()[rand_row][1] = physicalPageNumber; // column 1 being physical page mapping
+
+        return rand_row;
     }
+
+    /**
+     * allocates {@code size/PAGE_SIZE} pages of memory.
+     * Uses random access
+     *
+     * @param size size of the memory block to be allocated, must be a multiple of our page size
+     * @return start virtual address if success -1 if failure
+     */
+    public static int allocateMemory(int size) {
+        if(size % PAGE_SIZE != 0) throw new RuntimeException("Size not multiple of page size");
+
+        PCB runningPCB = scheduler.runningPCB;
+        int[] physicalPages = new int[size/ PAGE_SIZE]; // pages to be allocated
+        int virtualStart;
+
+        int freePageIndex = 0;
+        for(int i = 0; i < physicalPages.length; i++) {
+            // find and add a free page
+            for(; freePageIndex < PAGE_COUNT; freePageIndex++) {
+                if(pageUseMap[freePageIndex]) {
+                    physicalPages[i] = freePageIndex;
+                    break;
+                }
+            }
+            if(freePageIndex >+ PAGE_COUNT)
+                return -1; // no free space
+        }
+
+        int i = 0;
+        for(int page : physicalPages) {
+            if(runningPCB.virtualPages[i] == -1)
+                runningPCB.virtualPages[i] = page;
+            i++;
+        }
+
+        virtualStart = runningPCB.getAvailableMemory();
+        runningPCB.setAvailableMemory(virtualStart + size);
+        return virtualStart;
+    }
+
+    public static boolean freeMemory(int pointer, int size) {
+        if(pointer % PAGE_SIZE != 0 || size % PAGE_SIZE != 0)
+            throw new RuntimeException("Size not multiple of page size");
+
+        PCB runningPCB = scheduler.runningPCB;
+
+        for(int i = pointer; i < size/ PAGE_SIZE; i++) {
+            int physicalPage = runningPCB.virtualPages[i];
+
+            pageUseMap[physicalPage] = false;
+            runningPCB.virtualPages[i] = -1;
+        }
+        return true;
+    }
+
 
 
     /* UTILITY */

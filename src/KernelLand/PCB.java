@@ -2,8 +2,10 @@ package KernelLand;
 
 import UserLand.UserlandProcess;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
+
 
 public class PCB {
     private final UserlandProcess up;
@@ -13,21 +15,34 @@ public class PCB {
 
     private final Queue<Message> messageQueue;
 
+    /* SCHEDULING */
     /** Time until the process can be awoken note: can wake up if time >= timeToWake */
     long timeToWake;
     private boolean isSleeping = false;
     private boolean isWaiting = false;
-
     private OS.Priority priority;
 
+    /* DEVICES */
     private final int[] deviceIDs = new int[] {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+
+    /* MEMORY */
+    private int availableMemory;
+
+    static public final int PROCESS_PAGE_COUNT = 100;
+    /** Map of virtual pages to physical pages where the array index indicates the virtual page and the entry
+     * represents the physical mapping, or -1 if no mapping exists */
+    int[] virtualPages = new int[PROCESS_PAGE_COUNT];
+
 
     /** creates thread, sets pid */
     PCB(UserlandProcess up) {
+        Arrays.fill(virtualPages, -1);
+
         pid = nextpid++;
         this.up = up;
         name = up.getClass().getSimpleName();
         messageQueue = new LinkedList<>();
+        availableMemory = 0;
     }
 
     public UserlandProcess getUp() {
@@ -111,5 +126,17 @@ public class PCB {
 
     boolean isDone(){
         return up.isDone();
+    }
+
+    public int[] getVirtualPages() {
+        return virtualPages;
+    }
+
+    public int getAvailableMemory() {
+        return availableMemory;
+    }
+
+    public void setAvailableMemory(int availableMemory) {
+        this.availableMemory = availableMemory;
     }
 }

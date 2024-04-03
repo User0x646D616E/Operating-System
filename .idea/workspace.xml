@@ -4,10 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="Implemented Messages">
+    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="Started paging">
+      <change afterPath="$PROJECT_DIR$/src/UserLand/Alloc.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/KernelLand/Kernel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Kernel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/KernelLand/OS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/OS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/KernelLand/PCB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/PCB.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/KernelLand/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Scheduler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UserLand/FileTyper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/FileTyper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UserLand/UserlandProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/UserlandProcess.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -47,10 +52,10 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
     <option name="sortByType" value="true" />
-    <option name="sortKey" value="BY_TYPE" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
     "Application.Main.executor": "Run",
     "Application.RealTimeFileReader.executor": "Run",
     "Attach to process.pid 17780.executor": "ProcessAttachDebug",
@@ -69,7 +74,7 @@
     "git-widget-placeholder": "master",
     "jdk.selected.JAVA_MODULE": "17",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/User/OneDrive - University at Albany - SUNY/code/javaCode/IdeaProjects/OS",
+    "last_opened_file_path": "C:/Users/desti/OneDrive - University at Albany - SUNY/code/javaCode/IdeaProjects/OS",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.0",
     "project.structure.side.proportion": "0.2",
@@ -305,7 +310,15 @@
       <option name="project" value="LOCAL" />
       <updated>1711125793763</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Started paging">
+      <option name="closed" value="true" />
+      <created>1711665600141</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1711665600141</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -356,7 +369,8 @@
     <MESSAGE value="File Typer implemented" />
     <MESSAGE value="Fixed program breaking bug.&#10;When the Idle process was the only processes running it would call switch process, switch to itself, AND THEN sleep. This means that no process can then call switch process to awake the idle process" />
     <MESSAGE value="Implemented Messages" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implemented Messages" />
+    <MESSAGE value="Started paging" />
+    <option name="LAST_COMMIT_MESSAGE" value="Started paging" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

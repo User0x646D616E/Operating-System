@@ -85,7 +85,7 @@ public class Scheduler {
         OSPrinter.println("KernelLand.Scheduler: Create process");
 
         Queue<PCB> priorityQueue;
-        switch (priority){
+        switch(priority) {
             case REALTIME -> priorityQueue = realTime;
             case INTERACTIVE -> priorityQueue = interactive;
             case BACKGROUND -> priorityQueue = background;

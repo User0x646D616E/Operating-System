@@ -10,6 +10,7 @@ import static KernelLand.OS.currentCall;
 import static KernelLand.OS.returnValue;
 import static KernelLand.OS.params;
 
+import java.util.Arrays;
 import java.util.concurrent.Semaphore;
 
 public class Kernel implements Runnable, Device {
@@ -22,6 +23,18 @@ public class Kernel implements Runnable, Device {
 
     static Scheduler scheduler;
     static VFS vfs;
+
+    /* MEMORY */
+    static public final int PAGE_COUNT, PAGE_SIZE;
+    static boolean[] pageUseMap;
+    static {
+        PAGE_COUNT = 1024;
+        PAGE_SIZE = 1024;
+        pageUseMap = new boolean[PAGE_COUNT];
+
+        Arrays.fill(pageUseMap, false);
+    }
+
 
     Kernel() {
         if(thread != null){
@@ -57,7 +70,7 @@ public class Kernel implements Runnable, Device {
             OSPrinter.print("Kernel: Running " + OS.currentCall + " -> ");
 
             /* Get call and run it*/
-            switch (OS.currentCall) {
+            switch(currentCall) {
                 /* Scheduler */
                 case CREATEPROCESS -> returnValue = scheduler.createProcess
                         ((UserlandProcess) params.get(0), (OS.Priority) params.get(1));

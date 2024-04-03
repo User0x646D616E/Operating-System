@@ -1,5 +1,7 @@
 package UserLand;
 
+import KernelLand.OS;
+
 import java.util.*;
 
 import static KernelLand.OS.*;
@@ -18,7 +20,7 @@ public class FileTyper extends UserlandProcess {
 
         while(true) {
             input = getString("Type into file: ");
-            write(id, ((String)input).getBytes());
+            OS.write(id, ((String)input).getBytes());
 
             sleep(1000, 0);
         }
@@ -34,7 +36,7 @@ public class FileTyper extends UserlandProcess {
         /* type into file */
         while(true) {
             input = getString("Type into file: ");
-            write(id, ((String)input).getBytes());
+            OS.write(id, ((String)input).getBytes());
 
             sleep(1000);
         }
@@ -72,7 +74,7 @@ public class FileTyper extends UserlandProcess {
                 }
                 case 4 -> {
                     System.out.print("Type file id: "); id = scanner.nextInt();
-                    System.out.print(Arrays.toString(read(id, 50)));
+                    System.out.print(Arrays.toString(OS.read(id, 50)));
                 }
             }
             cooperate();

@@ -3,6 +3,9 @@ package UserLand;
 import KernelLand.OS;
 import java.util.concurrent.Semaphore;
 
+import static KernelLand.Kernel.PAGE_SIZE;
+import static KernelLand.PCB.PROCESS_PAGE_COUNT;
+
 public abstract class UserlandProcess implements Runnable {
 
     /* THREAD EXECUTION */
@@ -11,20 +14,17 @@ public abstract class UserlandProcess implements Runnable {
     private final Semaphore semaphore;
     public int pid;
 
-
     /* SCHEDULING */
     boolean quantumExpired;
     int timeoutCounter = 0;
     OS.Priority priority;
 
-
     /* MEMORY */
-    final int PAGE_SIZE = 1024;
-    /** The memory available to our OS */
-    static byte[] memory = new byte[1024*1024];
+    /** The memory available to our Machine */
+    private static final byte[] memory = new byte[1024*1024];
 
     /** Translation look aside buffer caches frequently used virtual to physical memory mappings.
-     * maps 2 virtual addresses to their respective physical address.
+     * maps 2 virtual pages to their respective physical pages.
      * Column 0 holds virtual addresses and column 1 holds the physical map */
     static int[][] tlb = new int[2][2];
 
@@ -46,25 +46,65 @@ public abstract class UserlandProcess implements Runnable {
     }
 
     /**
-     * Reads data from virtual memory
+     * Reads a byte from memory.
      * Converts a virtual address to a physical address and reads from memory
      *
      * @param address the virtual address to be read from
-     * @return the physical address
+     * @return data read from address
      */
     public byte read(int address) {
-        // search tlb for virtual address
-        for(int i = 0; i < tlb[0].length; i++) { // column 0 being virtual mappings
-            if(address == tlb[0][i])
-                return memory[calcPhysicalAddress(address)]; // calculate and return physical address
+        if(address > PAGE_SIZE * PROCESS_PAGE_COUNT || address < 0)
+            throw new RuntimeException("Attempted memory access out of bounds");
+
+        final int virtualPage, pageOffset, physicalAddress;
+
+        virtualPage = address / PAGE_SIZE; // virtual page to physical page mapping
+        pageOffset = address % PAGE_SIZE;
+
+        /* check if address is in tlb */
+        for(int[] virtual_physical : tlb)
+        {
+            if(virtualPage == virtual_physical[0]) { // column 0 being virtual page
+                /* calculate and return byte at physical address */
+                physicalAddress = virtual_physical[1] + pageOffset;
+                return memory[physicalAddress];
+            }
         }
 
-        OS.getMapping(address); // look in memory
-        return 0;
+        /* Get physical address mapping */
+        physicalAddress = tlb[OS.getMapping(address)][1] + pageOffset;
+        return memory[physicalAddress];
     }
 
-    /** Writes data from virtual memory */
+    /**
+     * Writes a byte to memory
+     *
+     * @param address to write to
+     * @param value byte to write
+     */
     public void write(int address, byte value) {
+        if(address > PAGE_SIZE * PROCESS_PAGE_COUNT || address < 0)
+            throw new RuntimeException("Attempted memory access out of bounds");
+
+        final int virtualPage, pageOffset, physicalAddress;
+
+        virtualPage = address/ PAGE_SIZE; // virtual page to physical page mapping
+        pageOffset = address % PAGE_SIZE;
+
+        /* check if address is in tlb */
+        for (int[] virtual_physical : tlb)
+        {
+            if(virtualPage == virtual_physical[0]) { // column 0 being virtual page
+                /* calculate and return physical address */
+                physicalAddress = virtual_physical[1] + pageOffset;
+                memory[physicalAddress] = value;
+                return;
+            }
+        }
+
+        /* Get physical address mapping */
+        physicalAddress = tlb[OS.getMapping(address)][1] + pageOffset;
+        memory[physicalAddress] = value;
     }
 
     /** takes a virtual address and calculates the physical address */
@@ -175,6 +215,10 @@ public abstract class UserlandProcess implements Runnable {
 
     public Thread getThread() {
        return thread;
+    }
+
+    public static int[][] getTlb() {
+        return tlb;
     }
 }
 
