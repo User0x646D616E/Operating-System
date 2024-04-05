@@ -25,7 +25,11 @@ public class Kernel implements Runnable, Device {
     static VFS vfs;
 
     /* MEMORY */
-    static public final int PAGE_COUNT, PAGE_SIZE;
+    /** Number of pages available to our OS */
+    static public final int PAGE_COUNT;
+    /** Page size of our OS */
+    static public final int PAGE_SIZE;
+    /** Maps all pages with a boolean value that represents page usage */
     static boolean[] pageUseMap;
     static {
         PAGE_COUNT = 1024;
@@ -50,8 +54,7 @@ public class Kernel implements Runnable, Device {
         }
     }
 
-    public void start()
-    {
+    public void start() {
         semaphore.release();
     }
 

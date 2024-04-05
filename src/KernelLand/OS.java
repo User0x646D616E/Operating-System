@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static KernelLand.Kernel.*;
+import static KernelLand.PCB.PROCESS_PAGE_COUNT;
 
 public class OS {
     /** Our Kernel <3 */
@@ -218,16 +219,20 @@ public class OS {
 
     /**
      * Updates tlb with virtual-physical mapping.
-     * Also checks if memory access is out of bounds
+     * returns -1 if memory access is out of bounds
      *
      * @param virtualPageNumber virtual page number we are mapping
-     * @return the index in the {@code tlb} that was updated
+     * @return the index in the {@code tlb} that was updated or -1 upon failure
      */
      public static int getMapping(int virtualPageNumber) {
-         if(virtualPageNumber * PAGE_SIZE > scheduler.runningPCB.getAvailableMemory())
-             throw new RuntimeException("Attempted memory access out of bounds");
+         PCB runningPCB = scheduler.runningPCB;
+         if(virtualPageNumber * PAGE_SIZE > runningPCB.getAvailableMemory()){
+             throw new RuntimeException(String.format("Attempted memory access out of bounds {%s}, page: %d\n"
+                     , scheduler.runningPCB, virtualPageNumber));
+         }
 
-        int physicalPageNumber = Kernel.scheduler.runningPCB.getVirtualPages()[virtualPageNumber];
+         /* Find mapping for virtual address */
+        int physicalPageNumber = runningPCB.getVirtualPages()[virtualPageNumber];
         int rand_row = virtualPageNumber % 2; // update a random row in tlb
 
         // update tlb
@@ -244,14 +249,26 @@ public class OS {
      * @return start virtual address if success -1 if failure
      */
     public static int allocateMemory(int size) {
-        if(size % PAGE_SIZE != 0) throw new RuntimeException("Size not multiple of page size");
-
         PCB runningPCB = scheduler.runningPCB;
+        if(size % PAGE_SIZE != 0) {
+            OSPrinter.printf("ERROR: AllocateMemory: Size not multiple of page size, %d\n" , size);
+            return -1;
+        }
+
+        final int max_size = PROCESS_PAGE_COUNT * PAGE_SIZE;
+        final int available_memory = runningPCB.getAvailableMemory();
+        if(available_memory + size > max_size) {
+            OSPrinter.printf("ERROR: AllocateMemory: Attempting to allocate %d bytes of memory when only %d are available, {%s}\n",
+                    size, max_size - available_memory, runningPCB);
+            return -1;
+        }
+
         int[] physicalPages = new int[size/ PAGE_SIZE]; // pages to be allocated
         int virtualStart;
 
         int freePageIndex = 0;
-        for(int i = 0; i < physicalPages.length; i++) {
+        for(int i = 0; i < physicalPages.length; i++)
+        {
             // find and add a free page
             for(; freePageIndex < PAGE_COUNT; freePageIndex++) {
                 if(pageUseMap[freePageIndex]) {
@@ -259,16 +276,15 @@ public class OS {
                     break;
                 }
             }
-            if(freePageIndex >+ PAGE_COUNT)
-                return -1; // no free space
+            if(freePageIndex >= PAGE_COUNT) {
+                OSPrinter.println("ERROR: AllocateMemory: no free page available");
+//                return -1; // no free space
+            }
         }
 
-        int i = 0;
-        for(int page : physicalPages) {
-            if(runningPCB.virtualPages[i] == -1)
-                runningPCB.virtualPages[i] = page;
-            i++;
-        }
+        int virtualPageIndex = runningPCB.getAvailableMemory() / PAGE_SIZE;
+        for(int physicalPage : physicalPages)
+            runningPCB.virtualPages[virtualPageIndex++] = physicalPage;
 
         virtualStart = runningPCB.getAvailableMemory();
         runningPCB.setAvailableMemory(virtualStart + size);

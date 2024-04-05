@@ -6,6 +6,8 @@ import java.util.*;
 import UserLand.UserlandProcess;
 import Utility.OSPrinter;
 
+import static KernelLand.Kernel.*;
+
 public class Scheduler {
     /** Queue of processes the KernelLand.Scheduler can access with real time priority */
     private final Queue<PCB> realTime;
@@ -27,7 +29,7 @@ public class Scheduler {
     /** Currently running process */
     public PCB runningPCB;
 
-    /** Creates a new KernelLand.KernelLand.Scheduler */
+    /** Creates a new Scheduler */
     Scheduler()
     {
         realTime = new LinkedList<>();
@@ -45,6 +47,7 @@ public class Scheduler {
             public void run()
             {
                 demote();
+                UserlandProcess.clearTlb();
 
                 if(runningPCB.isDone())
                     OS.switchProcess();
@@ -118,33 +121,37 @@ public class Scheduler {
         OSPrinter.println("KernelLand.Scheduler: switch process");
 
         Queue<PCB> runningPriority = getPriorityQueue(runningPCB);
-        runningPriority.remove(runningPCB);
-
         Queue<PCB> newPriority = choosePriority();
 
-        if(runningPCB.isDone()) {
-            /* Close Devices */
-            for(int id : runningPCB.getDeviceIDs())
-                Kernel.vfs.close(id);
-            processPIDs.remove(runningPCB.getPid());
-        }
+        runningPriority.remove(runningPCB);
+
+        if(runningPCB.isDone())
+           endProcess();
         else if(!runningPCB.isSleeping() && !runningPCB.isWaiting()) // if not sleeping and not waiting, then
             runningPriority.add(runningPCB);                                    // add back to the list
 
         if(newPriority == null) return; // no need to switch
         runningPCB = newPriority.peek();
-        // TODO
-//        if (runningPCB == null) runningPCB = choosePriority().peek();
 
         OSPrinter.println("Real time process list: " + realTime);
         OSPrinter.println("Interactive process list: " + interactive);
         OSPrinter.println("Background process list: " + background);
-//        OSPrinter.println("Sleeping process list: " + sleeping);
-//        OSPrinter.println("" + processPIDs.keySet() + processPIDs.values());
 
         OSPrinter.println("Running PCB: " + runningPCB);
 
         wakeProcess();
+    }
+
+    private void endProcess() {
+        /* Close Devices */
+        for(int id : runningPCB.getDeviceIDs())
+            Kernel.vfs.close(id);
+
+        /* Free Memory */
+        for(int i = 0; i < runningPCB.getAvailableMemory(); i++)
+            pageUseMap[runningPCB.virtualPages[i]] = false;
+
+        processPIDs.remove(runningPCB.getPid());
     }
 
     /** Stop currentPCB, add it to the {@code sleeping} queue and set the next process to run */
@@ -246,7 +253,8 @@ public class Scheduler {
             return realTime;
         else if (!interactive.isEmpty())
             return interactive;
-        throw new RuntimeException("All queues are empty");
+//        throw new RuntimeException("All queues are empty");
+        return null;
     }
 
     /** returns the priority queue that pcb belongs to */

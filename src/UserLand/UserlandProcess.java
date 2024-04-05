@@ -1,8 +1,12 @@
 package UserLand;
 
 import KernelLand.OS;
+import Utility.OSPrinter;
+
+import java.util.Arrays;
 import java.util.concurrent.Semaphore;
 
+import static KernelLand.Kernel.PAGE_COUNT;
 import static KernelLand.Kernel.PAGE_SIZE;
 import static KernelLand.PCB.PROCESS_PAGE_COUNT;
 
@@ -12,16 +16,16 @@ public abstract class UserlandProcess implements Runnable {
     final Thread thread;
     UserlandProcess parentThread;
     private final Semaphore semaphore;
-    public int pid;
 
     /* SCHEDULING */
     boolean quantumExpired;
     int timeoutCounter = 0;
     OS.Priority priority;
+    public int pid;
 
     /* MEMORY */
     /** The memory available to our Machine */
-    private static final byte[] memory = new byte[1024*1024];
+    private static final byte[] memory = new byte[PAGE_SIZE * PAGE_COUNT];
 
     /** Translation look aside buffer caches frequently used virtual to physical memory mappings.
      * maps 2 virtual pages to their respective physical pages.
@@ -72,7 +76,14 @@ public abstract class UserlandProcess implements Runnable {
         }
 
         /* Get physical address mapping */
-        physicalAddress = tlb[OS.getMapping(address)][1] + pageOffset;
+        int tlbRow = OS.getMapping(virtualPage);
+
+        physicalAddress = tlb[tlbRow][1] + pageOffset;
+        if(physicalAddress == -1) { // no mapping exists
+            OSPrinter.printf("ERROR: UserlandProcess Read: no mapping exists for virtual address %d\n", address);
+            return -1;
+        }
+
         return memory[physicalAddress];
     }
 
@@ -82,13 +93,13 @@ public abstract class UserlandProcess implements Runnable {
      * @param address to write to
      * @param value byte to write
      */
-    public void write(int address, byte value) {
+    public int write(int address, byte value) {
         if(address > PAGE_SIZE * PROCESS_PAGE_COUNT || address < 0)
             throw new RuntimeException("Attempted memory access out of bounds");
 
         final int virtualPage, pageOffset, physicalAddress;
 
-        virtualPage = address/ PAGE_SIZE; // virtual page to physical page mapping
+        virtualPage = address / PAGE_SIZE; // virtual page to physical page mapping
         pageOffset = address % PAGE_SIZE;
 
         /* check if address is in tlb */
@@ -98,13 +109,21 @@ public abstract class UserlandProcess implements Runnable {
                 /* calculate and return physical address */
                 physicalAddress = virtual_physical[1] + pageOffset;
                 memory[physicalAddress] = value;
-                return;
+                return 0;
             }
         }
 
         /* Get physical address mapping */
-        physicalAddress = tlb[OS.getMapping(address)][1] + pageOffset;
+        int tlbRow = OS.getMapping(virtualPage);
+
+        physicalAddress = tlb[tlbRow][1] + pageOffset;
+        if(physicalAddress == -1) { // no mapping exists
+            OSPrinter.printf("ERROR: UserlandProcess Write: no mapping exists for virtual address %d\n", address);
+            return -1;
+        }
+
         memory[physicalAddress] = value;
+        return 0;
     }
 
     /** takes a virtual address and calculates the physical address */
@@ -219,6 +238,13 @@ public abstract class UserlandProcess implements Runnable {
 
     public static int[][] getTlb() {
         return tlb;
+    }
+
+    public static void clearTlb() {
+        for(int [] virtual_physical : tlb)
+        {
+            Arrays.fill(virtual_physical, -1);
+        }
     }
 }
 

@@ -11,8 +11,7 @@ public class Alloc extends UserlandProcess {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("\nThis program allocates a page and allows you to type to memory\n");
-        int start_addr = allocate_page();
-        int curr_addr = start_addr;
+        int curr_addr = allocate_page();
 
         boolean running = true;
         while(running) {

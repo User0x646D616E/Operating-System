@@ -1,10 +1,9 @@
-import KernelLand.OS;
 import UserLand.*;
 
 import static KernelLand.OS.*;
 
 public class Main {
     public static void main(String[] args) {
-        startup(new Alloc());
+        startup(new RandMemory());
     }
 }
