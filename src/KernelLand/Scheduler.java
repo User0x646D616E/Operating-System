@@ -148,7 +148,7 @@ public class Scheduler {
             Kernel.vfs.close(id);
 
         /* Free Memory */
-        for(int i = 0; i < runningPCB.getAvailableMemory(); i++)
+        for(int i = 0; i < runningPCB.getAvailableMemory()/PAGE_SIZE; i++)
             pageUseMap[runningPCB.virtualPages[i]] = false;
 
         processPIDs.remove(runningPCB.getPid());

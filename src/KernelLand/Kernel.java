@@ -33,7 +33,7 @@ public class Kernel implements Runnable, Device {
     static boolean[] pageUseMap;
     static {
         PAGE_COUNT = 1024;
-        PAGE_SIZE = 1024;
+        PAGE_SIZE = 127;
         pageUseMap = new boolean[PAGE_COUNT];
 
         Arrays.fill(pageUseMap, false);

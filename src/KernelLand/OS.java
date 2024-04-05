@@ -236,7 +236,7 @@ public class OS {
         int rand_row = virtualPageNumber % 2; // update a random row in tlb
 
         // update tlb
-        UserlandProcess.getTlb()[rand_row][1] = physicalPageNumber; // column 1 being physical page mapping
+        UserlandProcess.tlb[rand_row][1] = physicalPageNumber; // column 1 being physical page mapping
 
         return rand_row;
     }
@@ -271,14 +271,15 @@ public class OS {
         {
             // find and add a free page
             for(; freePageIndex < PAGE_COUNT; freePageIndex++) {
-                if(pageUseMap[freePageIndex]) {
+                if(!pageUseMap[freePageIndex]) {
                     physicalPages[i] = freePageIndex;
+                    pageUseMap[freePageIndex] = true;
                     break;
                 }
             }
-            if(freePageIndex >= PAGE_COUNT) {
+            if(freePageIndex > PAGE_COUNT) {
                 OSPrinter.println("ERROR: AllocateMemory: no free page available");
-//                return -1; // no free space
+                return -1; // no free space
             }
         }
 

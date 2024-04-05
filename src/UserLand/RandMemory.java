@@ -2,6 +2,7 @@ package UserLand;
 
 import KernelLand.OS;
 
+import javax.print.attribute.standard.PageRanges;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
@@ -14,57 +15,66 @@ public class RandMemory extends UserlandProcess {
 
     @Override
     void main() {
+        int page_number;
+        byte[] read;
 
-        boolean running = true;
-        while(running) {
-            int page_number;
-            byte[] read;
+        for(int i = 0 ; i < 2; i++) {
+            page_number = allocate_page();
 
-            for(int i = 0 ; i < 100; i++) {
-                page_number = allocate_page();
+            System.out.println("Writing to page: " + page_number);
 
-                System.out.println("Writing to page: " + page_number);
+            fillPage(page_number);
+            read = read_page(page_number);
 
-                fillPage(page_number);
-                read = read_page(page_number);
-
-                System.out.println(Arrays.toString(read));
-            }
-
-
-            System.out.print("allocate a page and fill with random bytes(y/n): ");
-            String input = scanner.next();
-            if(input.equalsIgnoreCase("y")) {
-                page_number = allocate_page();
-
-                System.out.println("Writing to page: " + page_number);
-
-                fillPage(page_number);
-                read = read_page(page_number);
-
-                System.out.println(Arrays.toString(read));
-
-                cooperate();
-            }
-            else running = false;
+            System.out.println(Arrays.toString(read));
         }
+
+//        boolean running = true;
+//        while(running) {
+//            System.out.print("allocate a page and fill with random bytes(y/n): ");
+//            String input = scanner.next();
+//            if(input.equalsIgnoreCase("y")) {
+//                page_number = allocate_page();
+//
+//                System.out.println("Writing to page: " + page_number);
+//
+//                fillPage(page_number);
+//                read = read_page(page_number);
+//
+//                System.out.println(Arrays.toString(read));
+//
+//                cooperate();
+//            }
+//            else running = false;
+//        }
     }
 
     private int allocate_page() {
-        int page_number = OS.allocateMemory(1024) / PAGE_SIZE;
-
-        if(page_number == -1)
+        int virtual_address = OS.allocateMemory(PAGE_SIZE);
+        if(virtual_address < 0)
             throw new RuntimeException("alloc failed");
-        return page_number;
+
+        return virtual_address / PAGE_SIZE;
     }
 
-    private void fillPage(int pageNumber) {
+    private void fillPageRandom(int pageNumber) {
         Random rand = new Random();
 
         byte[] random = new byte[PAGE_SIZE];
         rand.nextBytes(random);
 
         write_memory(pageNumber * PAGE_SIZE, random);
+    }
+
+    /**
+     * fills page with numbers
+     * @param pageNumber
+     */
+    private void fillPage(int pageNumber) {
+        byte[] arr = new byte[PAGE_SIZE];
+        for(byte i = 0; i < arr.length; i++)
+            arr[i] = i;
+        write_memory(pageNumber * PAGE_SIZE , arr);
     }
 
     private byte[] read_page(int page_number) {

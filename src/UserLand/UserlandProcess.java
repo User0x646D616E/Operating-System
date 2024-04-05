@@ -30,7 +30,7 @@ public abstract class UserlandProcess implements Runnable {
     /** Translation look aside buffer caches frequently used virtual to physical memory mappings.
      * maps 2 virtual pages to their respective physical pages.
      * Column 0 holds virtual addresses and column 1 holds the physical map */
-    static int[][] tlb = new int[2][2];
+    public static int[][] tlb = new int[2][2];
 
 
     /**
@@ -78,7 +78,7 @@ public abstract class UserlandProcess implements Runnable {
         /* Get physical address mapping */
         int tlbRow = OS.getMapping(virtualPage);
 
-        physicalAddress = tlb[tlbRow][1] + pageOffset;
+        physicalAddress = tlb[tlbRow][1]*PAGE_SIZE + pageOffset;
         if(physicalAddress == -1) { // no mapping exists
             OSPrinter.printf("ERROR: UserlandProcess Read: no mapping exists for virtual address %d\n", address);
             return -1;
@@ -116,7 +116,7 @@ public abstract class UserlandProcess implements Runnable {
         /* Get physical address mapping */
         int tlbRow = OS.getMapping(virtualPage);
 
-        physicalAddress = tlb[tlbRow][1] + pageOffset;
+        physicalAddress = tlb[tlbRow][1]*PAGE_SIZE + pageOffset;
         if(physicalAddress == -1) { // no mapping exists
             OSPrinter.printf("ERROR: UserlandProcess Write: no mapping exists for virtual address %d\n", address);
             return -1;
@@ -245,6 +245,10 @@ public abstract class UserlandProcess implements Runnable {
         {
             Arrays.fill(virtual_physical, -1);
         }
+    }
+
+    public static byte[] getMemory() {
+        return memory;
     }
 }
 
