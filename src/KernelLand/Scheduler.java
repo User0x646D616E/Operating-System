@@ -149,7 +149,7 @@ public class Scheduler {
 
         /* Free Memory */
         for(int i = 0; i < runningPCB.getAvailableMemory()/PAGE_SIZE; i++)
-            pageUseMap[runningPCB.virtualPages[i]] = false;
+            pageUseMap[runningPCB.virtual_physical[i].physicalPage] = false;
 
         processPIDs.remove(runningPCB.getPid());
     }

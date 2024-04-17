@@ -52,17 +52,6 @@ public class OS {
     /** next page to write out */
     static int pageNumber;
 
-    static {
-        currentCall = null;
-        callerPid = -1;
-        params = new ArrayList<>();
-        returnValue = null;
-
-        fileSystem = new FakeFileSystem();
-        pageNumber = -1;
-    }
-
-
 
     /**
      *  Starts and initializes KernelLand.OS, running {@code UserLand.UserlandProcess} init
@@ -72,15 +61,23 @@ public class OS {
      */
     public static void startup(UserlandProcess init) {
         OSPrinter.println("OS: starting up :)");
+
+        /* shared memory */
+        currentCall = null;
+        callerPid = -1;
         params = new ArrayList<>();
+        returnValue = null;
+
+        /* file system */
+        fileSystem = new FakeFileSystem();
+        pageNumber = -1;
+        fileSystem.open("swapFile.cyst"); // Create swap file
+        pageNumber = 1; // TODO maybe
 
         OSPrinter.println("\nOS: KernelLand.Kernel waiting to run\n");
 
         createProcess(init);
         createProcess(new IdleProcess());
-
-        fileSystem.open("swapFile.cyst"); // Create swap file
-        pageNumber = 1; // TODO maybe
 
         OSPrinter.println("\nOS: startup complete\n");
     }
@@ -233,7 +230,6 @@ public class OS {
     }
 
     /* MEMORY */
-
     /**
      * Updates tlb with virtual-physical mapping.
      * returns -1 if memory access is out of bounds
@@ -249,7 +245,7 @@ public class OS {
          }
 
          /* Find mapping for virtual address */
-        int physicalPageNumber = runningPCB.getVirtualPages()[virtualPageNumber];
+        int physicalPageNumber = runningPCB.getVirtual_physical()[virtualPageNumber].physicalPage;
         int rand_row = virtualPageNumber % 2; // update a random row in tlb
 
         // update tlb
@@ -302,7 +298,7 @@ public class OS {
 
         int virtualPageIndex = runningPCB.getAvailableMemory() / PAGE_SIZE;
         for(int physicalPage : physicalPages)
-            runningPCB.virtualPages[virtualPageIndex++] = physicalPage;
+            runningPCB.virtual_physical[virtualPageIndex++].physicalPage = physicalPage;
 
         virtualStart = runningPCB.getAvailableMemory();
         runningPCB.setAvailableMemory(virtualStart + size);
@@ -316,10 +312,10 @@ public class OS {
         PCB runningPCB = scheduler.runningPCB;
 
         for(int i = pointer; i < size/ PAGE_SIZE; i++) {
-            int physicalPage = runningPCB.virtualPages[i];
+            int physicalPage = runningPCB.virtual_physical[i].physicalPage;
 
             pageUseMap[physicalPage] = false;
-            runningPCB.virtualPages[i] = -1;
+            runningPCB.virtual_physical[i].physicalPage = -1;
         }
         return true;
     }

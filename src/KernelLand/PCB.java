@@ -1,6 +1,7 @@
 package KernelLand;
 
 import UserLand.UserlandProcess;
+import Utility.VirtualToPhysicalMapping;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -30,13 +31,14 @@ public class PCB {
 
     static public final int PROCESS_PAGE_COUNT = 100;
     /** Map of virtual pages to physical pages where the array index indicates the virtual page and the entry
-     * represents the physical mapping, or -1 if no mapping exists */
-    int[] virtualPages = new int[PROCESS_PAGE_COUNT];
+     * represents the physical mapping, or null if no mapping exists */
+    VirtualToPhysicalMapping[] virtual_physical;
 
 
     /** creates thread, sets pid */
     PCB(UserlandProcess up) {
-        Arrays.fill(virtualPages, -1);
+        virtual_physical = new VirtualToPhysicalMapping[PROCESS_PAGE_COUNT];
+        Arrays.fill(virtual_physical, null);
 
         pid = nextpid++;
         this.up = up;
@@ -128,8 +130,8 @@ public class PCB {
         return up.isDone();
     }
 
-    public int[] getVirtualPages() {
-        return virtualPages;
+    public VirtualToPhysicalMapping[] getVirtual_physical() {
+        return virtual_physical;
     }
 
     public int getAvailableMemory() {
