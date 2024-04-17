@@ -1,5 +1,6 @@
 package KernelLand;
 
+import Devices.FakeFileSystem;
 import UserLand.IdleProcess;
 import UserLand.UserlandProcess;
 import Utility.OSPrinter;
@@ -31,10 +32,8 @@ public class OS {
     }
     /** System call to be executed by the KernelLand.Kernel */
     static CallType currentCall;
-
     /** The pid of the userland process that called an KernelLand.OS method */
     static int callerPid;
-
     /** Parameters of our system call {@code currentCall} */
     static ArrayList<Object> params;
     /** return value of our system call {@code currentCall} */
@@ -48,6 +47,21 @@ public class OS {
         INTERACTIVE,
         BACKGROUND,
     }
+
+    static FakeFileSystem fileSystem;
+    /** next page to write out */
+    static int pageNumber;
+
+    static {
+        currentCall = null;
+        callerPid = -1;
+        params = new ArrayList<>();
+        returnValue = null;
+
+        fileSystem = new FakeFileSystem();
+        pageNumber = -1;
+    }
+
 
 
     /**
@@ -64,6 +78,9 @@ public class OS {
 
         createProcess(init);
         createProcess(new IdleProcess());
+
+        fileSystem.open("swapFile.cyst"); // Create swap file
+        pageNumber = 1; // TODO maybe
 
         OSPrinter.println("\nOS: startup complete\n");
     }
