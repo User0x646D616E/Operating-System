@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="Fixing get mapping">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment=" think get mapping works">
       <change beforePath="$PROJECT_DIR$/src/KernelLand/OS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/OS.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -351,7 +350,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713491388046</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary=" think get mapping works">
+      <option name="closed" value="true" />
+      <created>1713491939038</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1713491939038</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -407,7 +414,8 @@
     <MESSAGE value="Paging working" />
     <MESSAGE value="starting virtual memory" />
     <MESSAGE value="Fixing get mapping" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixing get mapping" />
+    <MESSAGE value=" think get mapping works" />
+    <option name="LAST_COMMIT_MESSAGE" value=" think get mapping works" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
