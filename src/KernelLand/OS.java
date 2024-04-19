@@ -245,7 +245,7 @@ public class OS {
                      , scheduler.runningPCB, virtualPageNumber));
          }
 
-         /* Find mapping for virtual address */
+         /* Lazy load physical page to fulfill memory request */
         int physicalPageNumber = runningPCB.virtual_physical[virtualPageNumber].physicalPage;
         int rand_row = virtualPageNumber % 2; // calculate a random row in tlb
 
