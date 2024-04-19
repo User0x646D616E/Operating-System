@@ -264,7 +264,7 @@ public class OS {
         int freePageIndex = 0; // TODO make this random
         for (; freePageIndex < KERNEL_PAGE_COUNT; freePageIndex++) {
             if (!pageUseMap[freePageIndex]) { // found free page
-                virtualPhysicalMapping = new VirtualToPhysicalMapping();
+//                virtualPhysicalMapping = new VirtualToPhysicalMapping();
                 virtualPhysicalMapping.physicalPage = freePageIndex;
                 pageUseMap[freePageIndex] = true;
                 break;

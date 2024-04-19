@@ -4,16 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="starting virtual memory">
+    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="Fixing get mapping">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/KernelLand/Kernel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Kernel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/KernelLand/OS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/OS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/KernelLand/PCB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/PCB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/KernelLand/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Scheduler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserLand/RandMemory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/RandMemory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserLand/UserlandProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/UserlandProcess.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Utility/VirtualToPhysicalMapping.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Utility/VirtualToPhysicalMapping.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -350,7 +343,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713397769420</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Fixing get mapping">
+      <option name="closed" value="true" />
+      <created>1713491388046</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1713491388046</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -405,7 +406,8 @@
     <MESSAGE value="Paging v1" />
     <MESSAGE value="Paging working" />
     <MESSAGE value="starting virtual memory" />
-    <option name="LAST_COMMIT_MESSAGE" value="starting virtual memory" />
+    <MESSAGE value="Fixing get mapping" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixing get mapping" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
