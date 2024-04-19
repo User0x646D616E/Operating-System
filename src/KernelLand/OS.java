@@ -4,6 +4,7 @@ import Devices.FakeFileSystem;
 import UserLand.IdleProcess;
 import UserLand.UserlandProcess;
 import Utility.OSPrinter;
+import Utility.VirtualToPhysicalMapping;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -239,14 +240,17 @@ public class OS {
      */
      public static int getMapping(int virtualPageNumber) {
          PCB runningPCB = scheduler.runningPCB;
-         if(virtualPageNumber * PAGE_SIZE > runningPCB.getAvailableMemory()){
+         if(virtualPageNumber * PAGE_SIZE > runningPCB.getAvailableMemory()) {
              throw new RuntimeException(String.format("Attempted memory access out of bounds {%s}, page: %d\n"
                      , scheduler.runningPCB, virtualPageNumber));
          }
 
          /* Find mapping for virtual address */
-        int physicalPageNumber = runningPCB.getVirtual_physical()[virtualPageNumber].physicalPage;
-        int rand_row = virtualPageNumber % 2; // update a random row in tlb
+        int physicalPageNumber = runningPCB.virtual_physical[virtualPageNumber].physicalPage;
+        int rand_row = virtualPageNumber % 2; // calculate a random row in tlb
+
+         if(physicalPageNumber == -1)
+             physicalPageNumber = loadFreePage(virtualPageNumber);
 
         // update tlb
         UserlandProcess.tlb[rand_row][1] = physicalPageNumber; // column 1 being physical page mapping
@@ -254,72 +258,78 @@ public class OS {
         return rand_row;
     }
 
+    private static int loadFreePage(int virtualPage) {
+        VirtualToPhysicalMapping virtualPhysicalMapping = scheduler.runningPCB.virtual_physical[virtualPage];
+
+        int freePageIndex = 0; // TODO make this random
+        for (; freePageIndex < KERNEL_PAGE_COUNT; freePageIndex++) {
+            if (!pageUseMap[freePageIndex]) { // found free page
+                virtualPhysicalMapping = new VirtualToPhysicalMapping();
+                virtualPhysicalMapping.physicalPage = freePageIndex;
+                pageUseMap[freePageIndex] = true;
+                break;
+            }
+        }
+        if(freePageIndex >= KERNEL_PAGE_COUNT)
+            throw new RuntimeException("no free page available");
+        return virtualPhysicalMapping.physicalPage;
+    }
+
     /**
      * allocates {@code size/PAGE_SIZE} pages of memory.
      * Uses random access
      *
      * @param size size of the memory block to be allocated, must be a multiple of our page size
-     * @return start virtual address if success -1 if failure
+     * @return start virtual address of allocated memory if success -1 if failure
      */
     public static int allocateMemory(int size) {
         PCB runningPCB = scheduler.runningPCB;
+        if(checkErrors(size) < -1)
+            return -1;
+
+        int virtualPageStart = runningPCB.getAvailableMemory()/PAGE_SIZE;
+        int virtualStart = runningPCB.getAvailableMemory();
+
+        for(int i = 0; i < size/PAGE_SIZE; i++)
+            runningPCB.virtual_physical[virtualPageStart+i] = new VirtualToPhysicalMapping();
+
+        runningPCB.setAvailableMemory(virtualStart + size);
+        return virtualStart;
+    }
+
+    static private int checkErrors(int size) {
         if(size % PAGE_SIZE != 0) {
             OSPrinter.printf("ERROR: AllocateMemory: Size not multiple of page size, %d\n" , size);
             return -1;
         }
 
         final int max_size = PROCESS_PAGE_COUNT * PAGE_SIZE;
-        final int available_memory = runningPCB.getAvailableMemory();
+        final int available_memory = scheduler.runningPCB.getAvailableMemory();
         if(available_memory + size > max_size) {
             OSPrinter.printf("ERROR: AllocateMemory: Attempting to allocate %d bytes of memory when only %d are available, {%s}\n",
-                    size, max_size - available_memory, runningPCB);
+                    size, max_size - available_memory, scheduler.runningPCB);
             return -1;
         }
-
-        int[] physicalPages = new int[size/ PAGE_SIZE]; // pages to be allocated
-        int virtualStart;
-
-        int freePageIndex = 0;
-        for(int i = 0; i < physicalPages.length; i++)
-        {
-            // find and add a free page
-            for(; freePageIndex < PAGE_COUNT; freePageIndex++) {
-                if(!pageUseMap[freePageIndex]) {
-                    physicalPages[i] = freePageIndex;
-                    pageUseMap[freePageIndex] = true;
-                    break;
-                }
-            }
-            if(freePageIndex > PAGE_COUNT) {
-                OSPrinter.println("ERROR: AllocateMemory: no free page available");
-                return -1; // no free space
-            }
-        }
-
-        int virtualPageIndex = runningPCB.getAvailableMemory() / PAGE_SIZE;
-        for(int physicalPage : physicalPages)
-            runningPCB.virtual_physical[virtualPageIndex++].physicalPage = physicalPage;
-
-        virtualStart = runningPCB.getAvailableMemory();
-        runningPCB.setAvailableMemory(virtualStart + size);
-        return virtualStart;
+        else return 0;
     }
 
-    public static boolean freeMemory(int pointer, int size) {
+    public static void freeMemory(int pointer, int size) {
         if(pointer % PAGE_SIZE != 0 || size % PAGE_SIZE != 0)
             throw new RuntimeException("Size not multiple of page size");
 
-        PCB runningPCB = scheduler.runningPCB;
+        final PCB runningPCB = scheduler.runningPCB;
+        for(int i = pointer; i < size/PAGE_SIZE; i++) {
+            VirtualToPhysicalMapping toPhysicalMapping= runningPCB.virtual_physical[i];
 
-        for(int i = pointer; i < size/ PAGE_SIZE; i++) {
-            int physicalPage = runningPCB.virtual_physical[i].physicalPage;
+            if(toPhysicalMapping == null)
+                OSPrinter.println("freed memory not allocated");
 
-            pageUseMap[physicalPage] = false;
-            runningPCB.virtual_physical[i].physicalPage = -1;
+            else if(toPhysicalMapping.physicalPage != -1) {
+                pageUseMap[toPhysicalMapping.physicalPage] = false;
+                runningPCB.virtual_physical[i] = null;
+            }
         }
-        return true;
     }
-
 
 
     /* UTILITY */

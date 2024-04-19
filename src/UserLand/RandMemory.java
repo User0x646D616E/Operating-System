@@ -2,12 +2,10 @@ package UserLand;
 
 import KernelLand.OS;
 
-import javax.print.attribute.standard.PageRanges;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
-import static KernelLand.Kernel.PAGE_COUNT;
 import static KernelLand.Kernel.PAGE_SIZE;
 
 public class RandMemory extends UserlandProcess {
@@ -23,30 +21,11 @@ public class RandMemory extends UserlandProcess {
 
             System.out.println("Writing to page: " + page_number);
 
-            fillPage(page_number);
+            fillPageRandom(page_number);
             read = read_page(page_number);
 
             System.out.println(Arrays.toString(read));
         }
-
-//        boolean running = true;
-//        while(running) {
-//            System.out.print("allocate a page and fill with random bytes(y/n): ");
-//            String input = scanner.next();
-//            if(input.equalsIgnoreCase("y")) {
-//                page_number = allocate_page();
-//
-//                System.out.println("Writing to page: " + page_number);
-//
-//                fillPage(page_number);
-//                read = read_page(page_number);
-//
-//                System.out.println(Arrays.toString(read));
-//
-//                cooperate();
-//            }
-//            else running = false;
-//        }
     }
 
     private int allocate_page() {
@@ -72,8 +51,8 @@ public class RandMemory extends UserlandProcess {
      */
     private void fillPage(int pageNumber) {
         byte[] arr = new byte[PAGE_SIZE];
-        for(byte i = 0; i < arr.length; i++)
-            arr[i] = i;
+        for(int i = 0; i < arr.length; i++)
+            arr[i] = (byte) i;
         write_memory(pageNumber * PAGE_SIZE , arr);
     }
 

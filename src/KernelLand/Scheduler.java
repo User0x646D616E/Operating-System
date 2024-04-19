@@ -7,6 +7,7 @@ import UserLand.UserlandProcess;
 import Utility.OSPrinter;
 
 import static KernelLand.Kernel.*;
+import static KernelLand.PCB.PROCESS_PAGE_COUNT;
 
 public class Scheduler {
     /** Queue of processes the KernelLand.Scheduler can access with real time priority */
@@ -148,8 +149,9 @@ public class Scheduler {
             Kernel.vfs.close(id);
 
         /* Free Memory */
-        for(int i = 0; i < runningPCB.getAvailableMemory()/PAGE_SIZE; i++)
-            pageUseMap[runningPCB.virtual_physical[i].physicalPage] = false;
+        OS.freeMemory(0, PROCESS_PAGE_COUNT * PAGE_SIZE);
+//        for(int i = 0; i < runningPCB.getAvailableMemory()/PAGE_SIZE; i++)
+//            pageUseMap[runningPCB.virtual_physical[i].physicalPage] = false;
 
         processPIDs.remove(runningPCB.getPid());
     }

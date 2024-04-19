@@ -26,15 +26,15 @@ public class Kernel implements Runnable, Device {
 
     /* MEMORY */
     /** Number of pages available to our OS */
-    static public final int PAGE_COUNT;
+    static public final int KERNEL_PAGE_COUNT;
     /** Page size of our OS */
     static public final int PAGE_SIZE;
     /** Maps all pages with a boolean value that represents page usage */
     static boolean[] pageUseMap;
     static {
-        PAGE_COUNT = 1024;
+        KERNEL_PAGE_COUNT = 1024;
         PAGE_SIZE = 1024;
-        pageUseMap = new boolean[PAGE_COUNT];
+        pageUseMap = new boolean[KERNEL_PAGE_COUNT];
 
         Arrays.fill(pageUseMap, false);
     }

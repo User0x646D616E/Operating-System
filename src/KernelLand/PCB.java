@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import static KernelLand.Kernel.PAGE_SIZE;
+
 
 public class PCB {
     private final UserlandProcess up;

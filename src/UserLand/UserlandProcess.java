@@ -6,7 +6,7 @@ import Utility.OSPrinter;
 import java.util.Arrays;
 import java.util.concurrent.Semaphore;
 
-import static KernelLand.Kernel.PAGE_COUNT;
+import static KernelLand.Kernel.KERNEL_PAGE_COUNT;
 import static KernelLand.Kernel.PAGE_SIZE;
 import static KernelLand.PCB.PROCESS_PAGE_COUNT;
 
@@ -25,7 +25,7 @@ public abstract class UserlandProcess implements Runnable {
 
     /* MEMORY */
     /** The memory available to our Machine */
-    private static final byte[] memory = new byte[PAGE_SIZE * PAGE_COUNT];
+    private static final byte[] memory = new byte[PAGE_SIZE * KERNEL_PAGE_COUNT];
 
     /** Translation look aside buffer caches frequently used virtual to physical memory mappings.
      * maps 2 virtual pages to their respective physical pages.
@@ -75,13 +75,13 @@ public abstract class UserlandProcess implements Runnable {
             }
         }
 
-        /* Get physical address mapping */
+        /* Get physical page mapping */
         int tlbRow = OS.getMapping(virtualPage);
 
         physicalAddress = tlb[tlbRow][1]*PAGE_SIZE + pageOffset;
         if(physicalAddress == -1) { // no mapping exists
             OSPrinter.printf("ERROR: UserlandProcess Read: no mapping exists for virtual address %d\n", address);
-            return -1;
+            return -1; // TODO throw an exception
         }
 
         return memory[physicalAddress];
@@ -114,9 +114,10 @@ public abstract class UserlandProcess implements Runnable {
         }
 
         /* Get physical address mapping */
+//        System.out.println("writing to address " + address);
         int tlbRow = OS.getMapping(virtualPage);
-
         physicalAddress = tlb[tlbRow][1]*PAGE_SIZE + pageOffset;
+
         if(physicalAddress == -1) { // no mapping exists
             OSPrinter.printf("ERROR: UserlandProcess Write: no mapping exists for virtual address %d\n", address);
             return -1;
