@@ -16,16 +16,19 @@ public class RandMemory extends UserlandProcess {
         int page_number;
         byte[] read;
 
-        for(int i = 0 ; i < 2; i++) {
+        for(int i = 0 ; i < 100; i++) {
             page_number = allocate_page();
 
             System.out.println("Writing to page: " + page_number);
 
             fillPageRandom(page_number);
-            read = read_page(page_number);
+//            read = read_page(page_number);
 
-            System.out.println(Arrays.toString(read));
+//            System.out.println(Arrays.toString(read));
         }
+
+        while(true)
+            cooperateOnInterrupt();
     }
 
     private int allocate_page() {
@@ -47,6 +50,7 @@ public class RandMemory extends UserlandProcess {
 
     /**
      * fills page with numbers
+     *
      * @param pageNumber
      */
     private void fillPage(int pageNumber) {

@@ -76,6 +76,20 @@ public class FakeFileSystem implements Device {
         return read;
     }
 
+    public byte[] read(int id, int off, int len) {
+        byte[] read = new byte[len];
+        try
+        {
+            for(int i = 0; i < len; i++){
+                read[i] = (byte) randomAccessFiles[id].read(read, off, len);
+                if(read[i] == -1) break; // end of file
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return read;
+    }
+
     @Override
     public void seek(int id, int to) {
 
@@ -95,6 +109,27 @@ public class FakeFileSystem implements Device {
 
         try {
             randomAccessFiles[id].write(data);
+        } catch (IOException e) {
+            return -1;
+        }
+        return 0;
+    }
+
+    /**
+     * Writes len bytes from the specified byte array starting at offset off to this file.
+     *
+     * @param id the id if the file to be written to.
+     * @param data the byte[] to be written
+     * @param off – the start offset in the data.
+     * @param len – the number of bytes to write.
+     * @return 0 if write succeeds, -1 if write fails
+     */
+    public int write(int id, byte[] data, int off, int len) {
+        if(randomAccessFiles[id] == null)
+            throw new RuntimeException("404: file not found");
+
+        try {
+            randomAccessFiles[id].write(data, off, len);
         } catch (IOException e) {
             return -1;
         }

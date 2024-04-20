@@ -48,7 +48,7 @@ public class Scheduler {
             public void run()
             {
                 demote();
-                UserlandProcess.clearTlb();
+//                UserlandProcess.clearTlb();
 
                 if(runningPCB.isDone())
                     OS.switchProcess();

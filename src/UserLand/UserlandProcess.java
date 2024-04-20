@@ -25,12 +25,17 @@ public abstract class UserlandProcess implements Runnable {
 
     /* MEMORY */
     /** The memory available to our Machine */
-    private static final byte[] memory = new byte[PAGE_SIZE * KERNEL_PAGE_COUNT];
+    public static final byte[] memory;
 
     /** Translation look aside buffer caches frequently used virtual to physical memory mappings.
      * maps 2 virtual pages to their respective physical pages.
      * Column 0 holds virtual addresses and column 1 holds the physical map */
-    public static int[][] tlb = new int[2][2];
+    public static int[][] tlb;
+
+    static {
+        tlb = new int[][]{{-1, -1}, {-1, -1}};
+        memory = new byte[PAGE_SIZE * KERNEL_PAGE_COUNT];
+    }
 
 
     /**
@@ -80,8 +85,8 @@ public abstract class UserlandProcess implements Runnable {
 
         physicalAddress = tlb[tlbRow][1]*PAGE_SIZE + pageOffset;
         if(physicalAddress == -1) { // no mapping exists
-            OSPrinter.printf("ERROR: UserlandProcess Read: no mapping exists for virtual address %d\n", address);
-            return -1; // TODO throw an exception
+            throw new RuntimeException(String.format(
+                    "ERROR: UserlandProcess Read: no mapping exists for virtual address %d\n", address));
         }
 
         return memory[physicalAddress];
@@ -118,7 +123,7 @@ public abstract class UserlandProcess implements Runnable {
         int tlbRow = OS.getMapping(virtualPage);
         physicalAddress = tlb[tlbRow][1]*PAGE_SIZE + pageOffset;
 
-        if(physicalAddress == -1) { // no mapping exists
+        if(physicalAddress <= -1) { // no mapping exists
             OSPrinter.printf("ERROR: UserlandProcess Write: no mapping exists for virtual address %d\n", address);
             return -1;
         }
@@ -161,6 +166,7 @@ public abstract class UserlandProcess implements Runnable {
          timeoutCounter++;
          parentThread.switchProcess();
          quantumExpired = false;
+         UserlandProcess.clearTlb(); // TODO their is probably a better place for this, whenever a process is switched
          stop();
 
          return true;

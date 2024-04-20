@@ -6,11 +6,11 @@ import UserLand.UserlandProcess;
 import Utility.OSPrinter;
 import Utility.VirtualToPhysicalMapping;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 
 import static KernelLand.Kernel.*;
 import static KernelLand.PCB.PROCESS_PAGE_COUNT;
+import static UserLand.UserlandProcess.memory;
 
 public class OS {
     /** Our Kernel <3 */
@@ -49,9 +49,12 @@ public class OS {
         BACKGROUND,
     }
 
+    /* Virtual Memory */
     static FakeFileSystem fileSystem;
+    /** File ID of our swap file in our FakeFileSystem */
+    static private int swapID;
     /** next page to write out */
-    static int pageNumber;
+    static int nextPage;
 
 
     /**
@@ -71,9 +74,8 @@ public class OS {
 
         /* file system */
         fileSystem = new FakeFileSystem();
-        pageNumber = -1;
-        fileSystem.open("swapFile.cyst"); // Create swap file
-        pageNumber = 1; // TODO maybe
+        swapID = fileSystem.open("swapFile.cyst"); // Create swap file
+        nextPage = 0;
 
         OSPrinter.println("\nOS: KernelLand.Kernel waiting to run\n");
 
@@ -232,24 +234,24 @@ public class OS {
 
     /* MEMORY */
     /**
-     * Updates tlb with virtual-physical mapping.
-     * returns -1 if memory access is out of bounds
+     * Lazy loads physical address for a virtual memory request and Updates tlb with virtual-physical mapping.
+     * returns -1 if requested memory access is out of bounds.
      *
      * @param virtualPageNumber virtual page number we are mapping
      * @return the index in the {@code tlb} that was updated or -1 upon failure
      */
      public static int getMapping(int virtualPageNumber) {
          PCB runningPCB = scheduler.runningPCB;
-         if(virtualPageNumber * PAGE_SIZE > runningPCB.getAvailableMemory()) {
+         if (virtualPageNumber * PAGE_SIZE > runningPCB.getAvailableMemory()) {
              throw new RuntimeException(String.format("Attempted memory access out of bounds {%s}, page: %d\n"
                      , scheduler.runningPCB, virtualPageNumber));
          }
 
          /* Lazy load physical page to fulfill memory request */
-        int physicalPageNumber = runningPCB.virtual_physical[virtualPageNumber].physicalPage;
-        int rand_row = virtualPageNumber % 2; // calculate a random row in tlb
+         int physicalPageNumber = runningPCB.virtual_physical[virtualPageNumber].physicalPage;
+         int rand_row = virtualPageNumber % 2; // calculate a random row in tlb
 
-         if(physicalPageNumber == -1)
+         if(physicalPageNumber == -1) // no mapping
              physicalPageNumber = loadFreePage(virtualPageNumber);
 
         // update tlb
@@ -259,19 +261,82 @@ public class OS {
     }
 
     private static int loadFreePage(int virtualPage) {
-        VirtualToPhysicalMapping virtualPhysicalMapping = scheduler.runningPCB.virtual_physical[virtualPage];
+        VirtualToPhysicalMapping mapping = scheduler.runningPCB.virtual_physical[virtualPage];
+        VirtualToPhysicalMapping victimMapping;
 
         int freePageIndex = 0; // TODO make this random
         for (; freePageIndex < KERNEL_PAGE_COUNT; freePageIndex++) {
             if (!pageUseMap[freePageIndex]) { // found free page
-                virtualPhysicalMapping.physicalPage = freePageIndex;
+                mapping.physicalPage = freePageIndex;
                 pageUseMap[freePageIndex] = true;
                 break;
             }
         }
-        if(freePageIndex >= KERNEL_PAGE_COUNT)
-            throw new RuntimeException("no free page available");
-        return virtualPhysicalMapping.physicalPage;
+        if(freePageIndex >= KERNEL_PAGE_COUNT) { // no free page available
+            OSPrinter.printf("Swapping page\n");
+
+            /* Swap pages with a random process */
+            victimMapping = getRandomProcess();
+            writePageToDisk(victimMapping);
+
+            mapping.physicalPage = victimMapping.physicalPage; // assign new physical page
+            victimMapping.physicalPage = -1;
+
+            /* Initialize swapped memory */
+            final int from = mapping.physicalPage*PAGE_SIZE;
+            final int to = from+PAGE_SIZE;
+            Arrays.fill(memory, from, to, (byte) 0);
+        }
+
+        if(mapping.diskPage != -1)  // data was previously written to disk
+            loadPageFromDisk(mapping);
+
+        return mapping.physicalPage;
+    }
+
+    private static VirtualToPhysicalMapping getRandomProcess() {
+         Random random = new Random();
+         PCB victimProcess;
+
+
+
+        /* get random process */
+        // TODO could be better
+        while(true) {
+            int bound = scheduler.processPIDs.size();
+            victimProcess = scheduler.processPIDs.get(random.nextInt(bound));
+            if(victimProcess == null) continue;
+
+            for(VirtualToPhysicalMapping mapping : victimProcess.virtual_physical) {
+                if(mapping == null) break;
+                if(mapping.physicalPage != -1)
+                    return mapping;
+            }
+        }
+    }
+
+    private static void writePageToDisk(VirtualToPhysicalMapping mapping) {
+        final int start = mapping.physicalPage * PAGE_SIZE;
+        final int end = start + PAGE_SIZE;
+        final int diskOffset;
+
+        /* assign new page in swap file */
+        if(mapping.diskPage == -1)
+            mapping.diskPage = nextPage++;
+        diskOffset = mapping.diskPage*PAGE_SIZE;
+
+        fileSystem.write(swapID, Arrays.copyOfRange(memory, start, end),
+                diskOffset , PAGE_SIZE);
+    }
+
+    private static void loadPageFromDisk(VirtualToPhysicalMapping mapping) {
+        int from = mapping.diskPage*PAGE_SIZE;
+        byte[] swap = fileSystem.read(swapID, from, PAGE_SIZE);
+
+        int start = mapping.physicalPage*PAGE_SIZE;
+        if (PAGE_SIZE >= 0) System.arraycopy(swap, 0, memory, start, PAGE_SIZE);
+
+        mapping.diskPage = -1;
     }
 
     /**
