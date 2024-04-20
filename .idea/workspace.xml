@@ -4,14 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="Second paging attempt writes to first page memory[0, ...]">
+    <list default="true" id="9b9047cf-996d-4f3d-b2ae-c82f25405634" name="Changes" comment="Virtual pages broke as heck">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Devices/FakeFileSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Devices/FakeFileSystem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/KernelLand/OS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/OS.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/KernelLand/Scheduler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/KernelLand/Scheduler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserLand/RandMemory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/RandMemory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UserLand/UserlandProcess.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/UserLand/UserlandProcess.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -380,7 +377,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713500225709</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Virtual pages broke as heck">
+      <option name="closed" value="true" />
+      <created>1713583037903</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1713583037903</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -412,7 +417,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Technically works, but with alot of busy-waiting" />
     <MESSAGE value="If kernel was a thread" />
     <MESSAGE value="The OS and its kernel thread are now sycronised&#10;They can more easily use shared memory.&#10;The kernel can communicate using the lock object in OS." />
     <MESSAGE value="Functioning OS kind of" />
@@ -437,7 +441,8 @@
     <MESSAGE value="Fixing get mapping" />
     <MESSAGE value=" think get mapping works" />
     <MESSAGE value="Second paging attempt writes to first page memory[0, ...]" />
-    <option name="LAST_COMMIT_MESSAGE" value="Second paging attempt writes to first page memory[0, ...]" />
+    <MESSAGE value="Virtual pages broke as heck" />
+    <option name="LAST_COMMIT_MESSAGE" value="Virtual pages broke as heck" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

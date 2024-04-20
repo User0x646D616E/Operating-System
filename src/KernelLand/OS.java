@@ -74,7 +74,8 @@ public class OS {
 
         /* file system */
         fileSystem = new FakeFileSystem();
-        swapID = fileSystem.open("swapFile.cyst"); // Create swap file
+        swapID = fileSystem.open("swapFile.txt"); // Create swap file
+        fileSystem.clear(swapID);
         nextPage = 0;
 
         OSPrinter.println("\nOS: KernelLand.Kernel waiting to run\n");
@@ -325,8 +326,9 @@ public class OS {
             mapping.diskPage = nextPage++;
         diskOffset = mapping.diskPage*PAGE_SIZE;
 
-        fileSystem.write(swapID, Arrays.copyOfRange(memory, start, end),
-                diskOffset , PAGE_SIZE);
+//        fileSystem.write(swapID, Arrays.copyOfRange(memory, start, end),
+//                diskOffset , PAGE_SIZE);
+        fileSystem.write(swapID, Arrays.copyOfRange(memory, start, end));
     }
 
     private static void loadPageFromDisk(VirtualToPhysicalMapping mapping) {

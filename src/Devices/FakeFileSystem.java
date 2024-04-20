@@ -54,6 +54,14 @@ public class FakeFileSystem implements Device {
         randomAccessFiles[id] = null;
     }
 
+    public void clear(int id) {
+        try {
+            randomAccessFiles[id].setLength(0);
+        } catch (IOException e){
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Read an array of bytes from the file with ID id.
      *
