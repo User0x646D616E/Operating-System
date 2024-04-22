@@ -60,7 +60,7 @@ public class Scheduler {
         };
 
         /* Time in until next interrupt, in ms */
-        long quantum = 10;
+        long quantum = 1;
         interruptTimer.scheduleAtFixedRate(requestStop, 1000, quantum);
     }
 

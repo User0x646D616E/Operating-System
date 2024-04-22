@@ -19,7 +19,7 @@ public class RandMemory extends UserlandProcess {
         for(int i = 0 ; i < 100; i++) {
             page_number = allocate_page();
 
-            System.out.println("Writing to page: " + page_number);
+//            System.out.println("Writing to page: " + page_number);
 
             fillPageRandom(page_number);
 //            read = read_page(page_number);

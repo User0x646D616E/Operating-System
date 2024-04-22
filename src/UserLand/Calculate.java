@@ -27,34 +27,19 @@ public class Calculate extends UserlandProcess{
             a = b;
             b = next;
 
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-//            KernelLand.OS.sleep(1000000);
-            cooperate();
+            cooperateOnInterrupt();
         }
     }
 
     public void nextPrime(){
         int nextPrime;
         int currentNumber = 2; // Start with the first prime number
-        while(true){
+        while(true) {
             nextPrime = findNextPrime(currentNumber);
             System.out.println("next prime: " + nextPrime);
             currentNumber = nextPrime;
 
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-//            KernelLand.OS.sleep(1000);
-//            cooperate();
-            cooperate();
+            cooperateOnInterrupt();
         }
     }
 
